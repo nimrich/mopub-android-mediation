@@ -1,6 +1,7 @@
 package com.mopub.mobileads;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import com.mopub.common.MoPub;
 import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
+import com.verizon.ads.ActivityStateManager;
 import com.verizon.ads.Bid;
 import com.verizon.ads.BidRequestListener;
 import com.verizon.ads.CreativeInfo;
@@ -69,39 +71,37 @@ public class VerizonInterstitial extends CustomEventInterstitial {
             return;
         }
 
+        String siteId = serverExtras.get(getSiteIdKey());
+        String placementId = serverExtras.get(getPlacementIdKey());
+
         if (!VASAds.isInitialized()) {
-            final String siteId = serverExtras.get(getSiteIdKey());
-
-            if (TextUtils.isEmpty(siteId)) {
-                MoPubLog.log(CUSTOM, ADAPTER_NAME, "Ad request to Verizon failed because " +
-                        "siteId is empty");
-
-                logAndNotifyInterstitialFailed(LOAD_FAILED, ADAPTER_CONFIGURATION_ERROR);
-
-                return;
+            Application application = null;
+            if (context instanceof Application) {
+                application = (Application) context;
+            } else if (context instanceof Activity) {
+                application = ((Activity) context).getApplication();
             }
 
-            if (!(context instanceof Activity)) {
-                MoPubLog.log(CUSTOM, ADAPTER_NAME, "Ad request to Verizon failed because " +
-                        "context is not an Activity");
+
+            if ((application != null) && (!StandardEdition.initialize(application, siteId))) {
 
                 logAndNotifyInterstitialFailed(LOAD_FAILED, ADAPTER_CONFIGURATION_ERROR);
-
-                return;
-            }
-
-            final boolean success = StandardEdition.initializeWithActivity((Activity) context, siteId);
-
-            if (!success) {
-                MoPubLog.log(CUSTOM, ADAPTER_NAME, "Failed to initialize the Verizon SDK");
-
-                logAndNotifyInterstitialFailed(LOAD_FAILED, ADAPTER_CONFIGURATION_ERROR);
-
-                return;
             }
         }
 
-        final String placementId = serverExtras.get(getPlacementIdKey());
+        // Ensure that siteId is the key and cache serverExtras so siteId can be used to initialize VAS early at next launch
+        if (!TextUtils.isEmpty(siteId)) {
+            serverExtras.put(VerizonAdapterConfiguration.VAS_SITE_ID_KEY, siteId);
+        }
+        if (verizonAdapterConfiguration != null) {
+            verizonAdapterConfiguration.setCachedInitializationParameters(context, serverExtras);
+        }
+
+        // The current activity must be set as resumed so VAS can track ad visibility
+        ActivityStateManager activityStateManager = VASAds.getActivityStateManager();
+        if ((activityStateManager != null) && (context instanceof Activity)) {
+            activityStateManager.setState((Activity) context, ActivityStateManager.ActivityState.RESUMED);
+        }
 
         if (TextUtils.isEmpty(placementId)) {
             MoPubLog.log(CUSTOM, ADAPTER_NAME, "Ad request to Verizon failed because placement " +

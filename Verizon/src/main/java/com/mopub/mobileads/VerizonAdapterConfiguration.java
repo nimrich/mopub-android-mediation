@@ -1,5 +1,6 @@
 package com.mopub.mobileads;
 
+import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,8 @@ import com.mopub.mobileads.verizon.BuildConfig;
 import com.verizon.ads.Logger;
 import com.verizon.ads.SDKInfo;
 import com.verizon.ads.VASAds;
+import com.verizon.ads.edition.StandardEdition;
+import com.verizon.ads.utils.ThreadUtils;
 
 import java.util.Map;
 
@@ -22,6 +25,8 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
     public static final String MEDIATOR_ID = "MoPubVAS-" + ADAPTER_VERSION;
 
     private static final String MOPUB_NETWORK_NAME = BuildConfig.NETWORK_NAME;
+
+    static final String VAS_SITE_ID_KEY = "siteId";
 
     @NonNull
     @Override
@@ -60,17 +65,30 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
 
         Preconditions.checkNotNull(listener);
 
-        // Due to a limitation in the Verizon Ads SDK with tracking the Activity lifecycle, adapters
-        // will skip initializing the SDK directly.
-        listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class,
-                MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
-
-        final MoPubLog.LogLevel mopubLogLevel = MoPubLog.getLogLevel();
-
-        if (mopubLogLevel == MoPubLog.LogLevel.DEBUG) {
-            VASAds.setLogLevel(Logger.DEBUG);
-        } else if (mopubLogLevel == MoPubLog.LogLevel.INFO) {
-            VASAds.setLogLevel(Logger.INFO);
+        String siteId = null;
+        if (configuration != null) {
+            siteId = configuration.get(VAS_SITE_ID_KEY);
         }
+
+        final String finalSiteId = siteId;
+        ThreadUtils.postOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if ((!TextUtils.isEmpty(finalSiteId)) && (context instanceof Application) &&
+                    (StandardEdition.initialize((Application) context, finalSiteId))) {
+
+                    listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class,
+                        MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
+                }
+
+                final MoPubLog.LogLevel mopubLogLevel = MoPubLog.getLogLevel();
+
+                if (mopubLogLevel == MoPubLog.LogLevel.DEBUG) {
+                    VASAds.setLogLevel(Logger.DEBUG);
+                } else if (mopubLogLevel == MoPubLog.LogLevel.INFO) {
+                    VASAds.setLogLevel(Logger.INFO);
+                }
+            }
+        });
     }
 }
