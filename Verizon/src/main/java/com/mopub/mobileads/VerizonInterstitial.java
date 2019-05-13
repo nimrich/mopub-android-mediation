@@ -71,11 +71,15 @@ public class VerizonInterstitial extends CustomEventInterstitial {
             return;
         }
 
+        // Cache serverExtras so siteId can be used to initalizate VAS early at next launch
+        verizonAdapterConfiguration.setCachedInitializationParameters(context, serverExtras);
+
         String siteId = serverExtras.get(getSiteIdKey());
         String placementId = serverExtras.get(getPlacementIdKey());
 
         if (!VASAds.isInitialized()) {
             Application application = null;
+
             if (context instanceof Application) {
                 application = (Application) context;
             } else if (context instanceof Activity) {
@@ -83,23 +87,15 @@ public class VerizonInterstitial extends CustomEventInterstitial {
             }
 
 
-            if ((application != null) && (!StandardEdition.initialize(application, siteId))) {
+            if (application == null || !StandardEdition.initialize(application, siteId)) {
 
                 logAndNotifyInterstitialFailed(LOAD_FAILED, ADAPTER_CONFIGURATION_ERROR);
             }
         }
 
-        // Ensure that siteId is the key and cache serverExtras so siteId can be used to initialize VAS early at next launch
-        if (!TextUtils.isEmpty(siteId)) {
-            serverExtras.put(VerizonAdapterConfiguration.VAS_SITE_ID_KEY, siteId);
-        }
-        if (verizonAdapterConfiguration != null) {
-            verizonAdapterConfiguration.setCachedInitializationParameters(context, serverExtras);
-        }
-
         // The current activity must be set as resumed so VAS can track ad visibility
         ActivityStateManager activityStateManager = VASAds.getActivityStateManager();
-        if ((activityStateManager != null) && (context instanceof Activity)) {
+        if (activityStateManager != null && context instanceof Activity) {
             activityStateManager.setState((Activity) context, ActivityStateManager.ActivityState.RESUMED);
         }
 
@@ -127,8 +123,6 @@ public class VerizonInterstitial extends CustomEventInterstitial {
         } else {
             interstitialAdFactory.load(bid, new VerizonInterstitialListener());
         }
-
-        verizonAdapterConfiguration.setCachedInitializationParameters(context, serverExtras);
     }
 
     /**

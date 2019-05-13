@@ -77,32 +77,30 @@ public class VerizonBanner extends CustomEventBanner {
             return;
         }
 
+        // Cache serverExtras so siteId can be used to initalizate VAS early at next launch
+        verizonAdapterConfiguration.setCachedInitializationParameters(context, serverExtras);
+
         String siteId = serverExtras.get(getSiteIdKey());
         String placementId = serverExtras.get(getPlacementIdKey());
 
         if (!VASAds.isInitialized()) {
             Application application = null;
+
             if (context instanceof Application) {
                 application = (Application) context;
             } else if (context instanceof Activity) {
                 application = ((Activity) context).getApplication();
             }
 
-            if ((application != null) && (!StandardEdition.initialize(application, siteId))) {
+            if (application == null || !StandardEdition.initialize(application, siteId)) {
 
                 logAndNotifyBannerFailed(LOAD_FAILED, ADAPTER_CONFIGURATION_ERROR);
             }
         }
 
-        // Ensure that siteId is the key and cache serverExtras so siteId can be used to initalizate VAS early at next launch
-        if (!TextUtils.isEmpty(siteId)) {
-                serverExtras.put(VerizonAdapterConfiguration.VAS_SITE_ID_KEY, siteId);
-        }
-        verizonAdapterConfiguration.setCachedInitializationParameters(context, serverExtras);
-
         // The current activity must be set as resumed so VAS can track ad visibility
         ActivityStateManager activityStateManager = VASAds.getActivityStateManager();
-        if ((activityStateManager != null) && (context instanceof Activity)) {
+        if (activityStateManager != null && context instanceof Activity) {
                 activityStateManager.setState((Activity) context, ActivityStateManager.ActivityState.RESUMED);
         }
 
@@ -156,8 +154,6 @@ public class VerizonBanner extends CustomEventBanner {
         } else {
             inlineAdFactory.load(bid, new VerizonInlineAdListener());
         }
-
-        verizonAdapterConfiguration.setCachedInitializationParameters(context, serverExtras);
     }
 
 

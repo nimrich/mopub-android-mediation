@@ -70,15 +70,25 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
             siteId = configuration.get(VAS_SITE_ID_KEY);
         }
 
+        // If siteId is not passed on the initialization config, cannot preinitialize SDK.  siteId will be cached on the first request.
+        if (TextUtils.isEmpty(siteId)) {
+            listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class, MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
+
+            return;
+        }
+
         final String finalSiteId = siteId;
         ThreadUtils.postOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if ((!TextUtils.isEmpty(finalSiteId)) && (context instanceof Application) &&
-                    (StandardEdition.initialize((Application) context, finalSiteId))) {
+                if (context instanceof Application && StandardEdition.initialize((Application) context, finalSiteId)) {
 
                     listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class,
                         MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
+                } else {
+
+                    listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class,
+                        MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
                 }
 
                 final MoPubLog.LogLevel mopubLogLevel = MoPubLog.getLogLevel();
