@@ -22,7 +22,6 @@ import java.util.Map;
 public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
 
     private static final String ADAPTER_VERSION = BuildConfig.VERSION_NAME;
-
     private static final String MOPUB_NETWORK_NAME = BuildConfig.NETWORK_NAME;
     private static final String VAS_SITE_ID_KEY = "siteId";
 
@@ -65,9 +64,9 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
                                   @Nullable final Map<String, String> configuration,
                                   @NonNull final OnNetworkInitializationFinishedListener listener) {
 
+        Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(listener);
-        
-        
+
         final MoPubLog.LogLevel mopubLogLevel = MoPubLog.getLogLevel();
 
         if (mopubLogLevel == MoPubLog.LogLevel.DEBUG) {
@@ -77,13 +76,15 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
         }
 
         String siteId = null;
+
         if (configuration != null) {
             siteId = configuration.get(VAS_SITE_ID_KEY);
         }
 
         // The Verizon SDK needs a meaningful siteId to initialize. siteId is cached on the first request.
         if (TextUtils.isEmpty(siteId)) {
-            listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class, MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
+            listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class,
+                    MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
 
             return;
         }
@@ -93,11 +94,9 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
             @Override
             public void run() {
                 if (context instanceof Application && StandardEdition.initialize((Application) context, finalSiteId)) {
-
                     listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class,
                             MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
                 } else {
-
                     listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class,
                             MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
                 }
