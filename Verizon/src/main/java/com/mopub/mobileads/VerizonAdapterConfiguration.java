@@ -66,6 +66,15 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
                                   @NonNull final OnNetworkInitializationFinishedListener listener) {
 
         Preconditions.checkNotNull(listener);
+        
+        
+        final MoPubLog.LogLevel mopubLogLevel = MoPubLog.getLogLevel();
+
+        if (mopubLogLevel == MoPubLog.LogLevel.DEBUG) {
+            VASAds.setLogLevel(Logger.DEBUG);
+        } else if (mopubLogLevel == MoPubLog.LogLevel.INFO) {
+            VASAds.setLogLevel(Logger.INFO);
+        }
 
         String siteId = null;
         if (configuration != null) {
@@ -91,14 +100,6 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
 
                     listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class,
                             MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
-                }
-
-                final MoPubLog.LogLevel mopubLogLevel = MoPubLog.getLogLevel();
-
-                if (mopubLogLevel == MoPubLog.LogLevel.DEBUG) {
-                    VASAds.setLogLevel(Logger.DEBUG);
-                } else if (mopubLogLevel == MoPubLog.LogLevel.INFO) {
-                    VASAds.setLogLevel(Logger.INFO);
                 }
             }
         });
