@@ -21,12 +21,12 @@ import java.util.Map;
 
 public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
 
-    public static final String ADAPTER_VERSION = BuildConfig.VERSION_NAME;
-    public static final String MEDIATOR_ID = "MoPubVAS-" + ADAPTER_VERSION;
+    private static final String ADAPTER_VERSION = BuildConfig.VERSION_NAME;
 
     private static final String MOPUB_NETWORK_NAME = BuildConfig.NETWORK_NAME;
+    private static final String VAS_SITE_ID_KEY = "siteId";
 
-    static final String VAS_SITE_ID_KEY = "siteId";
+    static final String MEDIATOR_ID = "MoPubVAS-" + ADAPTER_VERSION;
 
     @NonNull
     @Override
@@ -56,11 +56,13 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
         }
 
         final String adapterVersion = getAdapterVersion();
-        return (!TextUtils.isEmpty(adapterVersion)) ? adapterVersion.substring(0, adapterVersion.lastIndexOf('.')) : "";
+        return (!TextUtils.isEmpty(adapterVersion)) ? adapterVersion.substring(0,
+                adapterVersion.lastIndexOf('.')) : "";
     }
 
     @Override
-    public void initializeNetwork(@NonNull final Context context, @Nullable final Map<String, String> configuration,
+    public void initializeNetwork(@NonNull final Context context,
+                                  @Nullable final Map<String, String> configuration,
                                   @NonNull final OnNetworkInitializationFinishedListener listener) {
 
         Preconditions.checkNotNull(listener);
@@ -70,7 +72,7 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
             siteId = configuration.get(VAS_SITE_ID_KEY);
         }
 
-        // If siteId is not passed on the initialization config, cannot preinitialize SDK.  siteId will be cached on the first request.
+        // The Verizon SDK needs a meaningful siteId to initialize. siteId is cached on the first request.
         if (TextUtils.isEmpty(siteId)) {
             listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class, MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
 
@@ -84,11 +86,11 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
                 if (context instanceof Application && StandardEdition.initialize((Application) context, finalSiteId)) {
 
                     listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class,
-                        MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
+                            MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
                 } else {
 
                     listener.onNetworkInitializationFinished(VerizonAdapterConfiguration.class,
-                        MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
+                            MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
                 }
 
                 final MoPubLog.LogLevel mopubLogLevel = MoPubLog.getLogLevel();

@@ -101,7 +101,7 @@ public class VerizonBanner extends CustomEventBanner {
         // The current activity must be set as resumed so VAS can track ad visibility
         ActivityStateManager activityStateManager = VASAds.getActivityStateManager();
         if (activityStateManager != null && context instanceof Activity) {
-                activityStateManager.setState((Activity) context, ActivityStateManager.ActivityState.RESUMED);
+            activityStateManager.setState((Activity) context, ActivityStateManager.ActivityState.RESUMED);
         }
 
         if (localExtras == null || localExtras.isEmpty()) {
