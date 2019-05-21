@@ -46,6 +46,8 @@ public class VerizonBanner extends CustomEventBanner {
     private static final String SITE_ID_KEY = "siteId";
     private static final String HEIGHT_KEY = "com_mopub_ad_height";
     private static final String WIDTH_KEY = "com_mopub_ad_width";
+    private static final String HEIGHT_LEGACY_KEY = "adHeight";
+    private static final String WIDTH_LEGACY_KEY = "adWidth";
 
     private InlineAdView verizonInlineAd;
     private CustomEventBannerListener bannerListener;
@@ -105,19 +107,37 @@ public class VerizonBanner extends CustomEventBanner {
         }
 
         if (localExtras == null || localExtras.isEmpty()) {
-            MoPubLog.log(CUSTOM, ADAPTER_NAME, "localExtras is null. Unable to extract banner sizes");
+            MoPubLog.log(CUSTOM, ADAPTER_NAME, "localExtras is null. Unable to extract banner sizes from localExtras");
 
-            logAndNotifyBannerFailed(LOAD_FAILED, ADAPTER_CONFIGURATION_ERROR);
+        } else {
 
-            return;
+            if (localExtras.get(getWidthKey()) != null) {
+                adWidth = (int) localExtras.get(getWidthKey());
+            }
+
+            if (localExtras.get(getHeightKey()) != null) {
+                adHeight = (int) localExtras.get(getHeightKey());
+            }
         }
 
-        if (localExtras.get(getWidthKey()) != null) {
-            adWidth = (int) localExtras.get(getWidthKey());
-        }
+        if (adHeight <= 0 || adWidth <= 0) {
+            // Fallback to server extras for legacy custom event integrations
+            final String widthString = serverExtras.get(WIDTH_LEGACY_KEY);
+            final String heightString = serverExtras.get(HEIGHT_LEGACY_KEY);
+            try {
+                if (widthString != null) {
+                    adWidth = Integer.parseInt(widthString);
+                }
+                if (heightString != null) {
+                    adHeight = Integer.parseInt(heightString);
+                }
+            } catch (NumberFormatException e) {
+                MoPubLog.log(CUSTOM, ADAPTER_NAME, "Unable to parse banner sizes from serverExtras.", e);
 
-        if (localExtras.get(getHeightKey()) != null) {
-            adHeight = (int) localExtras.get(getHeightKey());
+                logAndNotifyBannerFailed(LOAD_FAILED, ADAPTER_CONFIGURATION_ERROR);
+
+                return;
+            }
         }
 
         if (TextUtils.isEmpty(placementId) || adWidth <= 0 || adHeight <= 0) {
