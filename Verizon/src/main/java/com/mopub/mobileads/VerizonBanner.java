@@ -107,7 +107,7 @@ public class VerizonBanner extends CustomEventBanner {
         }
 
         if (localExtras == null || localExtras.isEmpty()) {
-            MoPubLog.log(CUSTOM, ADAPTER_NAME, "localExtras is null. Unable to extract banner sizes from localExtras");
+            MoPubLog.log(CUSTOM, ADAPTER_NAME, "localExtras is null. Unable to extract banner sizes from localExtras.  Will attempt to extract from serverExtras");
 
         } else {
 
@@ -124,6 +124,7 @@ public class VerizonBanner extends CustomEventBanner {
             // Fallback to server extras for legacy custom event integrations
             final String widthString = serverExtras.get(WIDTH_LEGACY_KEY);
             final String heightString = serverExtras.get(HEIGHT_LEGACY_KEY);
+
             try {
                 if (widthString != null) {
                     adWidth = Integer.parseInt(widthString);
