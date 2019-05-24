@@ -50,7 +50,7 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
     public String getNetworkSdkVersion() {
 
         final String editionVersion = Configuration.getString("com.verizon.ads",
-                "editionName", null);
+                "editionVersion", null);
 
         if (!TextUtils.isEmpty(editionVersion)) {
             return editionVersion;
