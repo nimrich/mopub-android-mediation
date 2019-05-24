@@ -30,6 +30,7 @@ import java.util.Map;
 
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CLICKED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
+import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THROWABLE;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_FAILED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_SUCCESS;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_FAILED;
@@ -107,21 +108,19 @@ public class VerizonBanner extends CustomEventBanner {
         }
 
         if (localExtras == null || localExtras.isEmpty()) {
-            MoPubLog.log(CUSTOM, ADAPTER_NAME, "localExtras is null. Unable to extract banner sizes from localExtras.  Will attempt to extract from serverExtras");
-
+            MoPubLog.log(CUSTOM, ADAPTER_NAME, "localExtras is null. Unable to extract banner " +
+                    "sizes from localExtras.  Will attempt to extract from serverExtras");
         } else {
-
             if (localExtras.get(getWidthKey()) != null) {
                 adWidth = (int) localExtras.get(getWidthKey());
             }
-
             if (localExtras.get(getHeightKey()) != null) {
                 adHeight = (int) localExtras.get(getHeightKey());
             }
         }
 
         if (adHeight <= 0 || adWidth <= 0) {
-            // Fallback to server extras for legacy custom event integrations
+            // Fall back to serverExtras for legacy custom event integrations
             final String widthString = serverExtras.get(WIDTH_LEGACY_KEY);
             final String heightString = serverExtras.get(HEIGHT_LEGACY_KEY);
 
@@ -133,7 +132,8 @@ public class VerizonBanner extends CustomEventBanner {
                     adHeight = Integer.parseInt(heightString);
                 }
             } catch (NumberFormatException e) {
-                MoPubLog.log(CUSTOM, ADAPTER_NAME, "Unable to parse banner sizes from serverExtras.", e);
+                MoPubLog.log(CUSTOM_WITH_THROWABLE, "Unable to parse banner sizes from " +
+                        "serverExtras.", e);
 
                 logAndNotifyBannerFailed(LOAD_FAILED, ADAPTER_CONFIGURATION_ERROR);
 
@@ -143,8 +143,8 @@ public class VerizonBanner extends CustomEventBanner {
 
         if (TextUtils.isEmpty(placementId) || adWidth <= 0 || adHeight <= 0) {
             MoPubLog.log(CUSTOM, ADAPTER_NAME,
-                    "Ad request to Verizon failed because either the placement ID, or width, or " +
-                            "height is <= 0");
+                    "Ad request to Verizon failed because either the placement ID is empty, or width " +
+                            "and/or height is <= 0");
 
             logAndNotifyBannerFailed(LOAD_FAILED, INTERNAL_ERROR);
 
