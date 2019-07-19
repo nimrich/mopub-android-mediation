@@ -32,7 +32,6 @@ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.WILL_LEAVE_APPLI
 import static com.mopub.mobileads.MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR;
 import static com.mopub.mobileads.VerizonUtils.convertErrorInfoToMoPub;
 
-
 public class VerizonRewardedVideo extends CustomEventRewardedVideo {
 
     private static final String ADAPTER_NAME = VerizonRewardedVideo.class.getSimpleName();
@@ -45,45 +44,34 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
     private InterstitialAd verizonInterstitialAd;
     private Activity activity;
     private String placementId = null;
-    private Class currentClass;
     private boolean rewarded = false;
 
     @NonNull
     private VerizonAdapterConfiguration verizonAdapterConfiguration;
 
-
     public VerizonRewardedVideo() {
-
-        currentClass = this.getClass();
         verizonAdapterConfiguration = new VerizonAdapterConfiguration();
     }
-
 
     @Nullable
     @Override
     protected LifecycleListener getLifecycleListener() {
-
         return lifecycleListener;
     }
-
 
     @NonNull
     @Override
     protected String getAdNetworkId() {
-
         return (placementId == null) ? "" : placementId;
     }
 
-
     @Override
     protected void onInvalidate() {
-
         if (verizonInterstitialAd != null) {
             verizonInterstitialAd.destroy();
             verizonInterstitialAd = null;
         }
     }
-
 
     private static final class VerizonLifecycleListener extends BaseLifecycleListener {
         @Override
@@ -97,19 +85,6 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
         }
     }
 
-
-    protected String getPlacementIdKey() {
-
-        return PLACEMENT_ID_KEY;
-    }
-
-
-    protected String getSiteIdKey() {
-
-        return SITE_ID_KEY;
-    }
-
-
     @Override
     protected boolean checkAndInitializeSdk(@NonNull final Activity launcherActivity,
         @NonNull final Map<String, Object> localExtras, @NonNull final Map<String, String> serverExtras) {
@@ -121,10 +96,7 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
             return false;
         }
 
-        // Cache serverExtras so siteId can be used to initalizate VAS early at next launch
-        verizonAdapterConfiguration.setCachedInitializationParameters(launcherActivity, serverExtras);
-
-        String siteId = serverExtras.get(getSiteIdKey());
+        String siteId = serverExtras.get(SITE_ID_KEY);
 
         if (!VASAds.isInitialized()) {
             Application application = null;
@@ -140,6 +112,21 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
             }
         }
 
+        placementId = serverExtras.get(PLACEMENT_ID_KEY);
+
+        if (TextUtils.isEmpty(placementId)) {
+            if (TextUtils.isEmpty(placementId)) {
+                MoPubLog.log(CUSTOM, ADAPTER_NAME, "Invalid extras-- Be sure you have a placement ID specified.");
+                MoPubRewardedVideoManager.onRewardedVideoLoadFailure(VerizonRewardedVideo.class, "",
+                    MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
+
+                return false;
+            }
+        }
+
+        // Cache serverExtras so siteId can be used to initalizate VAS early at next launch
+        verizonAdapterConfiguration.setCachedInitializationParameters(launcherActivity, serverExtras);
+
         // The current activity must be set as resumed so VAS can track ad visibility
         ActivityStateManager activityStateManager = VASAds.getActivityStateManager();
         if (activityStateManager != null) {
@@ -149,21 +136,11 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
         return true;
     }
 
-
     @Override
     protected void loadWithSdkInitialized(@NonNull final Activity activity, @NonNull final Map<String, Object> localExtras,
         @NonNull final Map<String, String> serverExtras) {
 
         this.activity = activity;
-        placementId = serverExtras.get(getPlacementIdKey());
-
-        if (TextUtils.isEmpty(placementId)) {
-            MoPubLog.log(CUSTOM, ADAPTER_NAME, "Invalid extras-- Be sure you have a placement ID specified.");
-            MoPubRewardedVideoManager.onRewardedVideoLoadFailure(currentClass, "",
-                MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
-
-            return;
-        }
 
         VASAds.setLocationEnabled(MoPub.getLocationAwareness() != MoPub.LocationAwareness.DISABLED);
 
@@ -177,13 +154,11 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
         interstitialAdFactory.load(new VerizonInterstitialListener());
     }
 
-
     @Override
     protected boolean hasVideoAvailable() {
         // forwarding deprecated method to its replacement
         return isReady();
     }
-
 
     @Override
     protected void showVideo() {
@@ -191,13 +166,10 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
         show();
     }
 
-
     @Override
     protected boolean isReady() {
-
         return verizonInterstitialAd != null;
     }
-
 
     @Override
     protected void show() {
@@ -211,14 +183,14 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
                     verizonInterstitialAd.show(activity);
                 } else {
                     MoPubLog.log(CUSTOM, ADAPTER_NAME, "show called before Verizon rewarded video ad was loaded.");
+                    MoPubRewardedVideoManager.onRewardedVideoLoadFailure(VerizonRewardedVideo.class, placementId,
+                        MoPubErrorCode.NETWORK_INVALID_STATE);
                 }
             }
         });
     }
 
-
     private class VerizonInterstitialFactoryListener implements InterstitialAdFactory.InterstitialAdFactoryListener {
-
 
         @Override
         public void onLoaded(final InterstitialAdFactory interstitialAdFactory, final InterstitialAd interstitialAd) {
@@ -236,9 +208,8 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
                 }
             });
 
-            MoPubRewardedVideoManager.onRewardedVideoLoadSuccess(currentClass, placementId);
+            MoPubRewardedVideoManager.onRewardedVideoLoadSuccess(VerizonRewardedVideo.class, placementId);
         }
-
 
         @Override
         public void onCacheLoaded(final InterstitialAdFactory interstitialAdFactory,
@@ -246,12 +217,10 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
 
         }
 
-
         @Override
         public void onCacheUpdated(final InterstitialAdFactory interstitialAdFactory, final int cacheSize) {
 
         }
-
 
         @Override
         public void onError(final InterstitialAdFactory interstitialAdFactory, final ErrorInfo errorInfo) {
@@ -259,14 +228,12 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
             MoPubLog.log(CUSTOM, ADAPTER_NAME, "Failed to load Verizon rewarded video due to " +
                 "error: " + errorInfo.toString());
 
-            MoPubRewardedVideoManager.onRewardedVideoLoadFailure(currentClass, placementId,
+            MoPubRewardedVideoManager.onRewardedVideoLoadFailure(VerizonRewardedVideo.class, placementId,
                 convertErrorInfoToMoPub(errorInfo));
         }
     }
 
-
     private class VerizonInterstitialListener implements InterstitialAd.InterstitialAdListener {
-
 
         @Override
         public void onError(final InterstitialAd interstitialAd, final ErrorInfo errorInfo) {
@@ -274,34 +241,30 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
             MoPubLog.log(CUSTOM, ADAPTER_NAME, "Failed to show Verizon rewarded video due to " +
                 "error: " + errorInfo.toString());
 
-            MoPubRewardedVideoManager.onRewardedVideoPlaybackError(currentClass, placementId,
+            MoPubRewardedVideoManager.onRewardedVideoPlaybackError(VerizonRewardedVideo.class, placementId,
                 MoPubErrorCode.INTERNAL_ERROR);
         }
-
 
         @Override
         public void onShown(final InterstitialAd interstitialAd) {
 
             MoPubLog.log(SHOW_SUCCESS, ADAPTER_NAME);
-            MoPubRewardedVideoManager.onRewardedVideoStarted(currentClass, placementId);
+            MoPubRewardedVideoManager.onRewardedVideoStarted(VerizonRewardedVideo.class, placementId);
         }
-
 
         @Override
         public void onClosed(final InterstitialAd interstitialAd) {
 
             MoPubLog.log(DID_DISAPPEAR, ADAPTER_NAME);
-            MoPubRewardedVideoManager.onRewardedVideoClosed(currentClass, placementId);
+            MoPubRewardedVideoManager.onRewardedVideoClosed(VerizonRewardedVideo.class, placementId);
         }
-
 
         @Override
         public void onClicked(final InterstitialAd interstitialAd) {
 
             MoPubLog.log(CLICKED, ADAPTER_NAME);
-            MoPubRewardedVideoManager.onRewardedVideoClicked(currentClass, placementId);
+            MoPubRewardedVideoManager.onRewardedVideoClicked(VerizonRewardedVideo.class, placementId);
         }
-
 
         @Override
         public void onAdLeftApplication(final InterstitialAd interstitialAd) {
@@ -309,7 +272,6 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
             // because it's an alias for interstitialListener.onInterstitialClicked()
             MoPubLog.log(WILL_LEAVE_APPLICATION, ADAPTER_NAME);
         }
-
 
         @Override
         public void onEvent(final InterstitialAd interstitialAd, final String source,
@@ -319,7 +281,7 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
 
                 rewarded = true;
 
-                MoPubRewardedVideoManager.onRewardedVideoCompleted(currentClass, placementId,
+                MoPubRewardedVideoManager.onRewardedVideoCompleted(VerizonRewardedVideo.class, placementId,
                     MoPubReward.success(MoPubReward.NO_REWARD_LABEL, MoPubReward.DEFAULT_REWARD_AMOUNT));
             }
         }
