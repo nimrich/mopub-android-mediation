@@ -108,6 +108,8 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
             if (!StandardEdition.initialize(application, siteId)) {
                 MoPubLog.log(LOAD_FAILED, ADAPTER_NAME, ADAPTER_CONFIGURATION_ERROR.getIntCode(),
                         ADAPTER_CONFIGURATION_ERROR);
+                MoPubRewardedVideoManager.onRewardedVideoLoadFailure(VerizonRewardedVideo.class, getAdNetworkId(),
+                    MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
 
                 return false;
             }
@@ -116,14 +118,12 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
         placementId = serverExtras.get(PLACEMENT_ID_KEY);
 
         if (TextUtils.isEmpty(placementId)) {
-            if (TextUtils.isEmpty(placementId)) {
-                MoPubLog.log(CUSTOM, ADAPTER_NAME, "Invalid extras--Make sure you have a " +
-                        "valid placement ID specified on the MoPub dashboard.");
-                MoPubRewardedVideoManager.onRewardedVideoLoadFailure(VerizonRewardedVideo.class, getAdNetworkId(),
-                        MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
+            MoPubLog.log(CUSTOM, ADAPTER_NAME, "Invalid extras--Make sure you have a " +
+                "valid placement ID specified on the MoPub dashboard.");
+            MoPubRewardedVideoManager.onRewardedVideoLoadFailure(VerizonRewardedVideo.class, getAdNetworkId(),
+                MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
 
-                return false;
-            }
+            return false;
         }
 
         // Cache serverExtras so siteId can be used to initalizate VAS early at next launch
