@@ -10,9 +10,7 @@ import com.verizon.ads.videoplayer.VideoView;
 
 import static com.mopub.common.logging.MoPubLog.SdkLogEvent.ERROR;
 
-
 class VerizonNativeViewHolder {
-
     @Nullable
     TextView titleView;
     @Nullable
@@ -26,22 +24,17 @@ class VerizonNativeViewHolder {
     @Nullable
     ImageView iconImageView;
 
-
     // Use fromViewBinder instead of a constructor
     private VerizonNativeViewHolder() {
-
     }
-
 
     static VerizonNativeViewHolder fromViewBinder(@Nullable final View view, @Nullable final ViewBinder viewBinder) {
 
         final VerizonNativeViewHolder viewHolder = new VerizonNativeViewHolder();
 
         if (view == null || viewBinder == null) {
-
             return viewHolder;
         }
-
 
         try {
             viewHolder.titleView = view.findViewById(viewBinder.titleId);
@@ -50,7 +43,7 @@ class VerizonNativeViewHolder {
             viewHolder.mainImageView = view.findViewById(viewBinder.mainImageId);
             viewHolder.iconImageView = view.findViewById(viewBinder.iconImageId);
 
-            if (viewBinder.extras != null && viewBinder.extras.get(VerizonNative.COMP_ID_VIDEO) != null) {
+            if (viewBinder.extras.get(VerizonNative.COMP_ID_VIDEO) != null) {
                 viewHolder.videoView = view.findViewById(viewBinder.extras.get(VerizonNative.COMP_ID_VIDEO));
             }
 

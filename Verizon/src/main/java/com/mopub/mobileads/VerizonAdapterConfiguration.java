@@ -21,11 +21,11 @@ import java.util.Map;
 
 public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
 
-    public static final String VAS_SITE_ID_KEY = "siteId";
     private static final String ADAPTER_VERSION = BuildConfig.VERSION_NAME;
     private static final String MOPUB_NETWORK_NAME = BuildConfig.NETWORK_NAME;
 
     public static final String MEDIATOR_ID = "MoPubVAS-" + ADAPTER_VERSION;
+    public static final String VAS_SITE_ID_KEY = "siteId";
 
     @NonNull
     @Override

@@ -95,7 +95,7 @@ public class VerizonBanner extends CustomEventBanner {
                 application = ((Activity) context).getApplication();
             }
 
-            if (application == null || !StandardEdition.initialize(application, siteId)) {
+            if (!StandardEdition.initialize(application, siteId)) {
 
                 logAndNotifyBannerFailed(LOAD_FAILED, ADAPTER_CONFIGURATION_ERROR);
             }
