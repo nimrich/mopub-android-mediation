@@ -109,7 +109,7 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
                 MoPubLog.log(LOAD_FAILED, ADAPTER_NAME, ADAPTER_CONFIGURATION_ERROR.getIntCode(),
                         ADAPTER_CONFIGURATION_ERROR);
                 MoPubRewardedVideoManager.onRewardedVideoLoadFailure(VerizonRewardedVideo.class, getAdNetworkId(),
-                    MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
+                        MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
 
                 return false;
             }
@@ -119,9 +119,9 @@ public class VerizonRewardedVideo extends CustomEventRewardedVideo {
 
         if (TextUtils.isEmpty(placementId)) {
             MoPubLog.log(CUSTOM, ADAPTER_NAME, "Invalid extras--Make sure you have a " +
-                "valid placement ID specified on the MoPub dashboard.");
+                    "valid placement ID specified on the MoPub dashboard.");
             MoPubRewardedVideoManager.onRewardedVideoLoadFailure(VerizonRewardedVideo.class, getAdNetworkId(),
-                MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
+                    MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
 
             return false;
         }

@@ -88,6 +88,7 @@ public class VerizonNative extends CustomEventNative {
         if (!VASAds.isInitialized()) {
 
             Application application = null;
+
             if (context instanceof Application) {
                 application = (Application) context;
             } else if (context instanceof Activity) {
