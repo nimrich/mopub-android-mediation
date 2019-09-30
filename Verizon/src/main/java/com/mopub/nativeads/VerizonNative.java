@@ -14,13 +14,13 @@ import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.VerizonAdapterConfiguration;
 import com.mopub.mobileads.VerizonUtils;
 import com.verizon.ads.ActivityStateManager;
+import com.verizon.ads.Component;
 import com.verizon.ads.CreativeInfo;
 import com.verizon.ads.ErrorInfo;
 import com.verizon.ads.VASAds;
 import com.verizon.ads.edition.StandardEdition;
 import com.verizon.ads.nativeplacement.NativeAd;
 import com.verizon.ads.nativeplacement.NativeAdFactory;
-import com.verizon.ads.nativeplacement.NativeComponentBundle;
 
 import org.json.JSONObject;
 
@@ -268,62 +268,75 @@ public class VerizonNative extends CustomEventNative {
             }
 
             // title
-            JSONObject titleJSON = nativeAd.getJSON("title");
-            if (titleJSON != null) {
-                verizonStaticNativeAd.setTitle(titleJSON.optString("data"));
-            }
+            verizonStaticNativeAd.setTitle(parseTextComponent("title", nativeAd));
             // body
-            JSONObject bodyJSON = nativeAd.getJSON("body");
-            if (bodyJSON != null) {
-                verizonStaticNativeAd.setText(bodyJSON.optString("data"));
-            }
+            verizonStaticNativeAd.setText(parseTextComponent("body", nativeAd));
             // callToAction
-            JSONObject callToActionJSON = nativeAd.getJSON("callToAction");
-            if (callToActionJSON != null) {
-                verizonStaticNativeAd.setCallToAction(callToActionJSON.optString("data"));
-            }
+            verizonStaticNativeAd.setCallToAction(parseTextComponent("callToAction", nativeAd));
+            // mainImage
+            verizonStaticNativeAd.setMainImageUrl(parseURLComponent("mainImage", nativeAd));
+            // iconImage
+            verizonStaticNativeAd.setIconImageUrl(parseURLComponent("iconImage", nativeAd));
+
+            // Optional components below
+
             // rating
-            JSONObject ratingJSON = nativeAd.getJSON("rating");
-            if (ratingJSON != null) {
-                String ratingString = ratingJSON.optString("data");
-                if (ratingString != null) {
-                    String[] ratingArray = ratingString.trim().split("\\s+");
-                    if (ratingArray.length >= 1) {
-                        try {
-                            Double rating = Double.parseDouble(ratingArray[0]);
-                            verizonStaticNativeAd.setStarRating(rating);
-                            verizonStaticNativeAd.addExtra(COMP_ID_RATING, ratingArray[0]);
-                        } catch (NumberFormatException e) {
-                            // do nothing
-                        }
+            String ratingString = parseTextComponent("rating", nativeAd);
+            if (ratingString != null) {
+                String[] ratingArray = ratingString.trim().split("\\s+");
+                if (ratingArray.length >= 1) {
+                    try {
+                        Double rating = Double.parseDouble(ratingArray[0]);
+                        verizonStaticNativeAd.setStarRating(rating);
+                        verizonStaticNativeAd.addExtra(COMP_ID_RATING, ratingArray[0]);
+                    } catch (NumberFormatException e) {
+                        // do nothing
                     }
                 }
             }
             // disclaimer
-            JSONObject disclaimerJSON = nativeAd.getJSON("disclaimer");
-            if (disclaimerJSON != null) {
-                String disclaimerString = disclaimerJSON.optString("data");
-                verizonStaticNativeAd.addExtra(COMP_ID_DISCLAIMER, disclaimerString);
-            }
-            // mainImage
-            JSONObject mainImageJSON = nativeAd.getJSON("mainImage");
-            if (mainImageJSON != null) {
-                String mainImageString = mainImageJSON.optString("url");
-                verizonStaticNativeAd.setMainImageUrl(mainImageString);
-            }
-            // iconImage
-            JSONObject iconImageJSON = nativeAd.getJSON("iconImage");
-            if (iconImageJSON != null) {
-                String iconImageString = iconImageJSON.optString("url");
-                verizonStaticNativeAd.setIconImageUrl(iconImageString);
+            String disclaimer = parseTextComponent("disclaimer", nativeAd);
+            if (!TextUtils.isEmpty(disclaimer)) {
+                verizonStaticNativeAd.addExtra(COMP_ID_DISCLAIMER, disclaimer);
             }
             //video
-            JSONObject videoJSON = nativeAd.getJSON("video");
-            if (videoJSON != null) {
-                String videoString = videoJSON.optString("url");
-                verizonStaticNativeAd.addExtra(COMP_ID_VIDEO, videoString);
+            String videoURL = parseURLComponent("video", nativeAd);
+            if (!TextUtils.isEmpty(videoURL)) {
+                verizonStaticNativeAd.addExtra(COMP_ID_VIDEO, videoURL);
             }
         }
+    }
+
+    private String parseTextComponent(final String key, final NativeAd nativeAd) {
+
+        String value = "";
+        JSONObject jsonObject = nativeAd.getJSON(key);
+        if (jsonObject != null) {
+            try {
+                JSONObject dataObject = jsonObject.getJSONObject("data");
+                value = dataObject.optString("value");
+            } catch (Exception e) {
+                MoPubLog.log(CUSTOM, ADAPTER_NAME, "Unable to parse " + key);
+            }
+        }
+
+        return value;
+    }
+
+    private String parseURLComponent(final String key, final NativeAd nativeAd) {
+
+        String url = "";
+        JSONObject jsonObject = nativeAd.getJSON(key);
+        if (jsonObject != null) {
+            try {
+                JSONObject dataObject = jsonObject.getJSONObject("data");
+                url = dataObject.optString("url");
+            } catch (Exception e) {
+                MoPubLog.log(CUSTOM, ADAPTER_NAME, "Unable to parse " + key);
+            }
+        }
+
+        return url;
     }
 
     class VerizonNativeListener implements NativeAd.NativeAdListener {
@@ -348,7 +361,7 @@ public class VerizonNative extends CustomEventNative {
         }
 
         @Override
-        public void onClicked(final NativeComponentBundle nativeComponentBundle) {
+        public void onClicked(final NativeAd nativeAd, final Component component)  {
             MoPubLog.log(CLICKED, ADAPTER_NAME);
         }
 
