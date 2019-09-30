@@ -3,8 +3,10 @@ package com.mopub.nativeads;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.view.View;
 
@@ -267,26 +269,21 @@ public class VerizonNative extends CustomEventNative {
                 return;
             }
 
-            // title
             verizonStaticNativeAd.setTitle(parseTextComponent("title", nativeAd));
-            // body
             verizonStaticNativeAd.setText(parseTextComponent("body", nativeAd));
-            // callToAction
             verizonStaticNativeAd.setCallToAction(parseTextComponent("callToAction", nativeAd));
-            // mainImage
             verizonStaticNativeAd.setMainImageUrl(parseURLComponent("mainImage", nativeAd));
-            // iconImage
             verizonStaticNativeAd.setIconImageUrl(parseURLComponent("iconImage", nativeAd));
 
-            // Optional components below
+            final String ratingString = parseTextComponent("rating", nativeAd);
 
-            // rating
-            String ratingString = parseTextComponent("rating", nativeAd);
-            if (ratingString != null) {
-                String[] ratingArray = ratingString.trim().split("\\s+");
-                if (ratingArray.length >= 1) {
+            if (!TextUtils.isEmpty(ratingString)) {
+                final String[] ratingArray = ratingString.trim().split("\\s+");
+
+                if (ratingArray.length > 0) {
                     try {
-                        Double rating = Double.parseDouble(ratingArray[0]);
+                        final Double rating = Double.parseDouble(ratingArray[0]);
+
                         verizonStaticNativeAd.setStarRating(rating);
                         verizonStaticNativeAd.addExtra(COMP_ID_RATING, ratingArray[0]);
                     } catch (NumberFormatException e) {
@@ -294,13 +291,15 @@ public class VerizonNative extends CustomEventNative {
                     }
                 }
             }
-            // disclaimer
-            String disclaimer = parseTextComponent("disclaimer", nativeAd);
+
+            final String disclaimer = parseTextComponent("disclaimer", nativeAd);
+
             if (!TextUtils.isEmpty(disclaimer)) {
                 verizonStaticNativeAd.addExtra(COMP_ID_DISCLAIMER, disclaimer);
             }
-            //video
-            String videoURL = parseURLComponent("video", nativeAd);
+
+            final String videoURL = parseURLComponent("video", nativeAd);
+
             if (!TextUtils.isEmpty(videoURL)) {
                 verizonStaticNativeAd.addExtra(COMP_ID_VIDEO, videoURL);
             }
@@ -308,35 +307,33 @@ public class VerizonNative extends CustomEventNative {
     }
 
     private String parseTextComponent(final String key, final NativeAd nativeAd) {
+        final JSONObject jsonObject = nativeAd.getJSON(key);
 
-        String value = "";
-        JSONObject jsonObject = nativeAd.getJSON(key);
         if (jsonObject != null) {
             try {
-                JSONObject dataObject = jsonObject.getJSONObject("data");
-                value = dataObject.optString("value");
+                final JSONObject dataObject = jsonObject.getJSONObject("data");
+                return dataObject.optString("value");
             } catch (Exception e) {
                 MoPubLog.log(CUSTOM, ADAPTER_NAME, "Unable to parse " + key);
             }
         }
 
-        return value;
+        return null;
     }
 
     private String parseURLComponent(final String key, final NativeAd nativeAd) {
+        final JSONObject jsonObject = nativeAd.getJSON(key);
 
-        String url = "";
-        JSONObject jsonObject = nativeAd.getJSON(key);
         if (jsonObject != null) {
             try {
-                JSONObject dataObject = jsonObject.getJSONObject("data");
-                url = dataObject.optString("url");
+                final JSONObject dataObject = jsonObject.getJSONObject("data");
+                return dataObject.optString("url");
             } catch (Exception e) {
                 MoPubLog.log(CUSTOM, ADAPTER_NAME, "Unable to parse " + key);
             }
         }
 
-        return url;
+        return null;
     }
 
     class VerizonNativeListener implements NativeAd.NativeAdListener {
@@ -361,7 +358,7 @@ public class VerizonNative extends CustomEventNative {
         }
 
         @Override
-        public void onClicked(final NativeAd nativeAd, final Component component)  {
+        public void onClicked(final NativeAd nativeAd, final Component component) {
             MoPubLog.log(CLICKED, ADAPTER_NAME);
         }
 
