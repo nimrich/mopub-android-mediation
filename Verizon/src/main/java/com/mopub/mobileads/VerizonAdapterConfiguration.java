@@ -51,9 +51,12 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
 
         final String editionVersion = Configuration.getString("com.verizon.ads",
                 "editionVersion", null);
+                
+        final String editionName = Configuration.getString("com.verizon.ads",
+                "editionName", null);
 
-        if (!TextUtils.isEmpty(editionVersion)) {
-            return editionVersion;
+        if (!TextUtils.isEmpty(editionVersion) && !TextUtils.isEmpty(editionName)) {
+            return editionName + "-" + editionVersion;
         }
 
         final String adapterVersion = getAdapterVersion();
