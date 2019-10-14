@@ -1,6 +1,6 @@
 ## Changelog
   * 1.2.0.1
-    * Add the edition name to the network SDK version.
+    * Log the Verizon SDK edition name (if available) together with the network SDK version.
   
   * 1.2.0.0
     * This version of the adapters has been certified with Verizon 1.2.0.
