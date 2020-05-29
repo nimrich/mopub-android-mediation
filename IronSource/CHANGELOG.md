@@ -1,4 +1,60 @@
 ## Changelog
+ * 6.16.1.0
+    * This version of the adapters has been certified with ironSource 6.16.1 and MoPub SDK 5.12.0.
+
+ * 6.16.0.0
+    * This version of the adapters has been certified with ironSource 6.16.0 and MoPub SDK 5.12.0.
+    * Support for Android Archive (AAR) version of the ironSource SDK.
+
+ * 6.15.0.1.0
+    * This version of the adapters has been certified with ironSource 6.15.0.1 and MoPub SDK 5.11.1.
+
+ * 6.14.0.1.0
+    * This version of the adapters has been certified with ironSource 6.14.0.1.
+
+ * 6.14.0.0
+    * This version of the adapters has been certified with ironSource 6.14.0.
+
+ * 6.13.0.1.0
+    * This version of the adapters has been certified with ironSource 6.13.0.1.
+    * Log the ironSource instance id in ad lifecycle events, and improve error console logs.
+
+ * 6.13.0.0
+    * This version of the adapters has been certified with ironSource 6.13.0.
+
+ * 6.11.0.0
+    * This version of the adapters has been certified with ironSource 6.11.0.
+
+ * 6.10.2.0
+    * This version of the adapters has been certified with ironSource 6.10.2.
+
+ * 6.10.1.0
+    * This version of the adapters has been certified with ironSource 6.10.1.
+
+ * 6.10.0.0
+    * This version of the adapters has been certified with ironSource 6.10.0.
+
+ * 6.9.1.1
+    * Add support for AndroidX. This is the minimum version compatible with MoPub 5.9.0.
+
+ * 6.9.1.0
+    * This version of the adapters has been certified with ironSource 6.9.1.
+
+ * 6.9.0.0
+    * This version of the adapters has been certified with ironSource 6.9.0.
+
+ * 6.8.5.0
+    * This version of the adapters has been certified with ironSource 6.8.5.
+
+ * 6.8.4.0
+    * This version of the adapters has been certified with ironSource 6.8.4.
+    * Revised adapter code to comply with ironSource 6.8.4.
+    * Remove `placementName`, ironSource SDK 6.8.4 no longer uses it.
+    * Ad load will fail gracefully if the unique `instanceIds` are not used during concurrent ad requests for rewarded video.
+    
+ * 6.8.3.0
+    * This version of the adapters has been certified with ironSource 6.8.3.
+
  * 6.8.2.2
     * Pass MoPub's log level to ironSource. To adjust ironSource's log level via MoPub's log settings, reference [this page](https://developers.mopub.com/publishers/android/test/#enable-logging).
 

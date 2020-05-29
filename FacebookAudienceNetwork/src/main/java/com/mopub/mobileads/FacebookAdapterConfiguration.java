@@ -1,16 +1,18 @@
 package com.mopub.mobileads;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.facebook.ads.AudienceNetworkAds;
 import com.facebook.ads.BidderTokenProvider;
 import com.mopub.common.BaseAdapterConfiguration;
+import com.mopub.common.MoPub;
 import com.mopub.common.OnNetworkInitializationFinishedListener;
 import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
-import com.mopub.mobileads.facebook.BuildConfig;
+import com.mopub.mobileads.facebookaudiencenetwork.BuildConfig;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,10 +21,13 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THROWABLE;
 
 public class FacebookAdapterConfiguration extends BaseAdapterConfiguration {
+    public static final String NATIVE_BANNER_KEY = "native_banner";
 
     private static final String ADAPTER_VERSION = BuildConfig.VERSION_NAME;
     private static final String MOPUB_NETWORK_NAME = BuildConfig.NETWORK_NAME;
-    private AtomicBoolean networkInitializationSucceeded = new AtomicBoolean(false);
+
+    private static Boolean isNativeBanner;
+
     private AtomicReference<String> tokenReference = new AtomicReference<>(null);
     private AtomicBoolean isComputingToken = new AtomicBoolean(false);
 
@@ -38,7 +43,7 @@ public class FacebookAdapterConfiguration extends BaseAdapterConfiguration {
         Preconditions.checkNotNull(context);
 
         refreshBidderToken(context);
-        return networkInitializationSucceeded.get() ? tokenReference.get() : null;
+        return tokenReference.get();
     }
 
     @NonNull
@@ -64,22 +69,34 @@ public class FacebookAdapterConfiguration extends BaseAdapterConfiguration {
 
         synchronized (FacebookAdapterConfiguration.class) {
             try {
-                AudienceNetworkAds.initialize(context);
-                refreshBidderToken(context);
-                networkInitializationSucceeded.set(true);
-            } catch (Exception e) {
-                MoPubLog.log(CUSTOM_WITH_THROWABLE, "Initializing Facebook Audience Network" +
-                        " has encountered an exception.", e);
+                tokenReference.set(BidderTokenProvider.getBidderToken(context));
+                AudienceNetworkAds.buildInitSettings(context)
+                        .withMediationService("MOPUB_" + MoPub.SDK_VERSION + ":" + ADAPTER_VERSION)
+                        .initialize();
+
+                if (configuration != null && !configuration.isEmpty()) {
+                    isNativeBanner = Boolean.valueOf(configuration.get(NATIVE_BANNER_KEY));
+
+                    setNativeBannerPref(isNativeBanner);
+                }
+            } catch (Throwable t) {
+                MoPubLog.log(
+                        CUSTOM_WITH_THROWABLE,
+                        "Initializing Facebook Audience Network" + " has encountered an " +
+                                "exception.",
+                        t);
             }
         }
+        listener.onNetworkInitializationFinished(this.getClass(),
+                MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
+    }
 
-        if (networkInitializationSucceeded.get()) {
-            listener.onNetworkInitializationFinished(this.getClass(),
-                    MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
-        } else {
-            listener.onNetworkInitializationFinished(this.getClass(),
-                    MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
-        }
+    public static Boolean getNativeBannerPref() {
+        return isNativeBanner;
+    }
+
+    private static void setNativeBannerPref(Boolean pref) {
+        isNativeBanner = pref;
     }
 
     private void refreshBidderToken(final Context context) {
@@ -87,7 +104,10 @@ public class FacebookAdapterConfiguration extends BaseAdapterConfiguration {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    tokenReference.set(BidderTokenProvider.getBidderToken(context));
+                    String token = BidderTokenProvider.getBidderToken(context);
+                    if (token != null) {
+                        tokenReference.set(token);
+                    }
                     isComputingToken.set(false);
                 }
             }).start();

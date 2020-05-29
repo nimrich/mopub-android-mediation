@@ -6,8 +6,3 @@
 build/
 captures/
 .externalNativeBuild
-.gitmodules
-Testing/
-*/*/libs/
-mopub-android/
-mopub-android-sdk/

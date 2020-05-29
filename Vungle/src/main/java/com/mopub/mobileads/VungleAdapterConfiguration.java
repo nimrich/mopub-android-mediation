@@ -1,9 +1,10 @@
 package com.mopub.mobileads;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mopub.common.BaseAdapterConfiguration;
 import com.mopub.common.OnNetworkInitializationFinishedListener;
@@ -14,16 +15,16 @@ import com.vungle.warren.Vungle;
 
 import java.util.Map;
 
-import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THROWABLE;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
+import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THROWABLE;
 
 public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
 
+    public static final String ADAPTER_VERSION = BuildConfig.VERSION_NAME;
     // Vungle's keys
     private static final String APP_ID_KEY = "appId";
     // Adapter's keys
     private static final String ADAPTER_NAME = VungleAdapterConfiguration.class.getSimpleName();
-    private static final String ADAPTER_VERSION = BuildConfig.VERSION_NAME;
     private static final String MOPUB_NETWORK_NAME = BuildConfig.NETWORK_NAME;
 
     private static VungleRouter sVungleRouter;
@@ -57,10 +58,12 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
     }
 
     @Override
-    public void initializeNetwork(@NonNull final Context context, @Nullable final Map<String, String> configuration, @NonNull final OnNetworkInitializationFinishedListener listener) {
-
+    public void initializeNetwork(@NonNull final Context context, @Nullable final Map<String, String> configuration,
+                                  @NonNull final OnNetworkInitializationFinishedListener listener) {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(listener);
+
+        applyVungleNetworkSettings(configuration);
 
         boolean networkInitializationSucceeded = false;
 
@@ -72,7 +75,7 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
                 } else if (configuration != null && sVungleRouter != null) {
                     final String mAppId = configuration.get(APP_ID_KEY);
                     if (TextUtils.isEmpty(mAppId)) {
-                        MoPubLog.log(CUSTOM, ADAPTER_NAME, "Vungle's initialization not " +
+                        MoPubLog.log(mAppId, CUSTOM, ADAPTER_NAME, "Vungle's initialization not " +
                                 "started. Ensure Vungle's appId is populated");
                         listener.onNetworkInitializationFinished(this.getClass(),
                                 MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
@@ -96,5 +99,33 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
             listener.onNetworkInitializationFinished(this.getClass(),
                     MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
         }
+    }
+
+    private void applyVungleNetworkSettings(Map<String, String> configuration) {
+        if (configuration == null || configuration.isEmpty()) {
+            return;
+        }
+        long minSpaceInit;
+        try {
+            minSpaceInit = Long.parseLong(configuration.get("VNG_MIN_SPACE_INIT"));
+        } catch (NumberFormatException e) {
+            //51 mb
+            minSpaceInit = 51 << 20;
+        }
+
+        long minSpaceLoadAd;
+        try {
+            minSpaceLoadAd = Long.parseLong(configuration.get("VNG_MIN_SPACE_LOAD_AD"));
+        } catch (NumberFormatException e) {
+            //50 mb
+            minSpaceLoadAd = 50 << 20;
+        }
+
+        boolean isAndroidIdOpted = Boolean.parseBoolean(configuration.get("VNG_DEVICE_ID_OPT_OUT"));
+
+        //Apply settings.
+        VungleNetworkSettings.setMinSpaceForInit(minSpaceInit);
+        VungleNetworkSettings.setMinSpaceForAdLoad(minSpaceLoadAd);
+        VungleNetworkSettings.setAndroidIdOptOut(isAndroidIdOpted);
     }
 }

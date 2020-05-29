@@ -1,4 +1,31 @@
 ## Changelog
+  * 8.0.2.1
+    * Set Chartboost delegation on each load request for interstitials and rewarded videos.
+
+  * 8.0.2.0
+    * Add support for banner format.
+    * This version of the adapters has been certified with Chartboost 8.0.2 and MoPub 5.11.1.
+
+  * 8.0.1.0
+    * This version of the adapters has been certified with Chartboost 8.0.1 and MoPub 5.11.1.
+    * Remove `Activity` requirement for Chartboost initialization, and remove `<activity>` declarations from the adapter AndroidManifest.
+
+  * 7.5.0.3
+    * Log the Chartboost location String in ad lifecycle events.
+    * Map additional error codes for failure cases.
+
+  * 7.5.0.2
+    * Prioritize reading data from `localExtras` and fall back to `MediationSettings` if necessary for ChartboostRewardedVideo.java.
+
+  * 7.5.0.1
+    * Add support for AndroidX. This is the minimum version compatible with MoPub 5.9.0.
+
+  * 7.5.0.0
+    * This version of the adapters has been certified with Chartboost 7.5.0.
+
+  * 7.3.1.4
+    * Refactor the `MediationSettings` implementation to maintain consistency with the MoPub Unity SDK.
+
   * 7.3.1.3
     * Pass MoPub's log level to Chartboost. To adjust Chartboost's log level via MoPub's log settings, reference [this page](https://developers.mopub.com/publishers/android/test/#enable-logging).
 
