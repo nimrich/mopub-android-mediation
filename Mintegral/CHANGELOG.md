@@ -1,4 +1,7 @@
 ## Changelog
+  * 14.1.01.0
+    * This version of the adapters has been certified with Mintegral 14.1.01 and MoPub 5.13.0.
+
   * 14.0.01.0
     * This version of the adapters has been certified with Mintegral 14.0.01 and MoPub 5.13.0.
     * This and newer adapter versions are only compatible with 5.13.0+ MoPub SDK.
