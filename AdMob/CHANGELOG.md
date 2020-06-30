@@ -1,4 +1,7 @@
 ## Changelog
+  * 19.2.0.1
+    * Fix interstitial load listener usage.
+
   * 19.2.0.0
     * This version of the adapters has been certified with AdMob 19.2.0 and MoPub 5.13.0.
 
