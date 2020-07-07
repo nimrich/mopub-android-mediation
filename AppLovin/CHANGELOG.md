@@ -1,4 +1,8 @@
 ## Changelog
+ * 9.13.0.0
+    * Fix interstitial load listener usage.
+    * This version of the adapters has been certified with AppLovin 9.13.0 and MoPub SDK 5.13.1.
+    
  * 9.12.8.0
     * This version of the adapters has been certified with AppLovin 9.12.8 and MoPub SDK 5.13.0.
 
