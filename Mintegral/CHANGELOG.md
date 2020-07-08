@@ -1,4 +1,7 @@
 ## Changelog
+  * 14.2.31.0
+    * This version of the adapters has been certified with Mintegral 14.2.31 and MoPub 5.13.1.
+
   * 14.2.01.0
     * This version of the adapters has been certified with Mintegral 14.2.01 and MoPub 5.13.0.
     * Implement initialization success and fail callbacks.
