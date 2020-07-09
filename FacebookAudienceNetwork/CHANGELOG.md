@@ -1,4 +1,7 @@
 ## Changelog
+ * 5.10.0.1
+   * Fix custom expiration logic for interstitial and rewarded video. Note: For expired interstitials, publishers need to call `destroy()` before requesting a new ad.
+
  * 5.10.0.0
    * This version of the adapters has been certified with Facebook Audience Network 5.10.0 and MoPub 5.13.1.
 
