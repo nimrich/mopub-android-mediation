@@ -47,6 +47,7 @@ public class VerizonRewardedVideo extends BaseAd {
     private static final String PLACEMENT_ID_KEY = "placementId";
     private static final String SITE_ID_KEY = "siteId";
     private static final String VIDEO_COMPLETE_EVENT_ID = "onVideoComplete";
+    private static final String AD_IMPRESSION_EVENT_ID = "adImpression";
 
     private InterstitialAd verizonInterstitialAd;
     private Activity activity;
@@ -160,8 +161,6 @@ public class VerizonRewardedVideo extends BaseAd {
 
         this.activity = (Activity) context;
 
-        VASAds.setLocationEnabled(MoPub.getLocationAwareness() != MoPub.LocationAwareness.DISABLED);
-
         final InterstitialAdFactory interstitialAdFactory = new InterstitialAdFactory(activity,
                 placementId, new VerizonInterstitialFactoryListener());
 
@@ -239,15 +238,6 @@ public class VerizonRewardedVideo extends BaseAd {
             }
         }
 
-        @Override
-        public void onCacheLoaded(final InterstitialAdFactory interstitialAdFactory,
-                                  final int numRequested, final int numReceived) {
-        }
-
-        @Override
-        public void onCacheUpdated(final InterstitialAdFactory interstitialAdFactory,
-                                   final int cacheSize) {
-        }
 
         @Override
         public void onError(final InterstitialAdFactory interstitialAdFactory,
@@ -278,7 +268,6 @@ public class VerizonRewardedVideo extends BaseAd {
             MoPubLog.log(getAdNetworkId(), SHOW_SUCCESS, ADAPTER_NAME);
             if (mInteractionListener != null) {
                 mInteractionListener.onAdShown();
-                mInteractionListener.onAdImpression();
             }
         }
 
@@ -309,7 +298,17 @@ public class VerizonRewardedVideo extends BaseAd {
         public void onEvent(final InterstitialAd interstitialAd, final String source,
                             final String eventId, final Map<String, Object> arguments) {
 
-            if (!rewarded && VIDEO_COMPLETE_EVENT_ID.equals(eventId)) {
+            if (AD_IMPRESSION_EVENT_ID.equals(eventId)) {
+                VerizonAdapterConfiguration.postOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (mInteractionListener != null) {
+                            mInteractionListener.onAdImpression();
+                        }
+                    }
+                });
+            } else if (!rewarded && VIDEO_COMPLETE_EVENT_ID.equals(eventId)) {
                 if (mInteractionListener != null) {
                     mInteractionListener.onAdComplete(MoPubReward.success(MoPubReward.NO_REWARD_LABEL,
                             MoPubReward.DEFAULT_REWARD_AMOUNT));
