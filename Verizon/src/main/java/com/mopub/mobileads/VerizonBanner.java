@@ -52,6 +52,7 @@ public class VerizonBanner extends BaseAd {
     private static final String SITE_ID_KEY = "siteId";
     private static final String HEIGHT_LEGACY_KEY = "adHeight";
     private static final String WIDTH_LEGACY_KEY = "adWidth";
+    private static final String AD_IMPRESSION_EVENT_ID = "adImpression";
 
     private InlineAdView verizonInlineAd;
     private FrameLayout internalView;
@@ -71,6 +72,8 @@ public class VerizonBanner extends BaseAd {
     protected void load(@NonNull final Context context, @NonNull final AdData adData) {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(adData);
+
+        setAutomaticImpressionAndClickTracking(false);
 
         final Map<String, String> extras = adData.getExtras();
         if (extras.isEmpty()) {
@@ -319,14 +322,6 @@ public class VerizonBanner extends BaseAd {
             });
         }
 
-        @Override
-        public void onCacheLoaded(final InlineAdFactory inlineAdFactory, final int numRequested,
-                                  final int numReceived) {
-        }
-
-        @Override
-        public void onCacheUpdated(final InlineAdFactory inlineAdFactory, final int cacheSize) {
-        }
 
         @Override
         public void onError(final InlineAdFactory inlineAdFactory, final ErrorInfo errorInfo) {
@@ -425,6 +420,18 @@ public class VerizonBanner extends BaseAd {
         @Override
         public void onEvent(final InlineAdView inlineAdView, final String source, final String eventId,
                             final Map<String, Object> arguments) {
+
+            if (AD_IMPRESSION_EVENT_ID.equals(eventId)) {
+                VerizonAdapterConfiguration.postOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (mInteractionListener != null) {
+                            mInteractionListener.onAdImpression();
+                        }
+                    }
+                });
+            }
         }
     }
 }

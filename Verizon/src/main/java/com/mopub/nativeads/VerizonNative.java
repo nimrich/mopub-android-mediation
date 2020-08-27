@@ -269,14 +269,6 @@ public class VerizonNative extends CustomEventNative {
             });
         }
 
-        @Override
-        public void onCacheLoaded(final NativeAdFactory nativeAdFactory, final int numRequested,
-                                  final int numReceived) {
-        }
-
-        @Override
-        public void onCacheUpdated(final NativeAdFactory nativeAdFactory, final int cacheSize) {
-        }
 
         @Override
         public void onError(final NativeAdFactory nativeAdFactory, final ErrorInfo errorInfo) {
