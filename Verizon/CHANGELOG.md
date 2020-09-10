@@ -1,6 +1,7 @@
 ## Changelog
   * 1.8.0.0
     * This version of the adapters has been certified with Verizon 1.8.0 and MoPub 5.13.1.
+    * No longer pass the ability to collect location.
 
   * 1.7.0.0
     * This version of the adapters has been certified with Verizon 1.7.0 and MoPub 5.13.1.

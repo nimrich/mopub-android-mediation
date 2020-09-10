@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import com.mopub.common.BaseLifecycleListener;
 import com.mopub.common.DataKeys;
 import com.mopub.common.LifecycleListener;
-import com.mopub.common.MoPub;
 import com.mopub.common.MoPubReward;
 import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
@@ -44,10 +43,10 @@ public class VerizonRewardedVideo extends BaseAd {
     private static final String ADAPTER_NAME = VerizonRewardedVideo.class.getSimpleName();
     private static final LifecycleListener lifecycleListener = new VerizonLifecycleListener();
 
+    private static final String AD_IMPRESSION_EVENT_ID = "adImpression";
     private static final String PLACEMENT_ID_KEY = "placementId";
     private static final String SITE_ID_KEY = "siteId";
     private static final String VIDEO_COMPLETE_EVENT_ID = "onVideoComplete";
-    private static final String AD_IMPRESSION_EVENT_ID = "adImpression";
 
     private InterstitialAd verizonInterstitialAd;
     private Activity activity;
@@ -300,7 +299,6 @@ public class VerizonRewardedVideo extends BaseAd {
 
             if (AD_IMPRESSION_EVENT_ID.equals(eventId)) {
                 VerizonAdapterConfiguration.postOnUiThread(new Runnable() {
-
                     @Override
                     public void run() {
                         if (mInteractionListener != null) {
