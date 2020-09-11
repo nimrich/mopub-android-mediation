@@ -276,6 +276,7 @@ public class VerizonNative extends CustomEventNative {
                     MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "Error Loading: " +
                             errorInfo);
                     NativeErrorCode errorCode = VerizonAdapterConfiguration.convertErrorInfoToMoPubNative(errorInfo);
+                    customEventNativeListener.onNativeAdFailed(errorCode);
                     MoPubLog.log(getAdNetworkId(), LOAD_FAILED, ADAPTER_NAME, errorCode.getIntCode(),
                             errorCode);
                 }
