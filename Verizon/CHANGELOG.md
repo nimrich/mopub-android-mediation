@@ -1,4 +1,7 @@
 ## Changelog
+  * 1.8.0.2
+    * Refactor native ad impression tracking logic. No external changes for publishers. 
+
   * 1.8.0.1
     * Fire `onNativeAdFailed()` on native ad failures so failovers can happen immediately.
 
