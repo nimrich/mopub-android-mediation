@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.mopub.nativeads.FacebookAdRenderer;
 import com.mopub.nativeads.GooglePlayServicesAdRenderer;
+import com.mopub.nativeads.GooglePlayServicesViewBinder;
 import com.mopub.nativeads.MediaViewBinder;
 import com.mopub.nativeads.MoPubAdAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
@@ -27,8 +28,6 @@ import com.mopub.nativeads.VerizonNativeAdRenderer;
 import com.mopub.nativeads.ViewBinder;
 
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.mopub.nativeads.MoPubNativeAdPositioning.MoPubServerPositioning;
 import static com.mopub.nativeads.RequestParameters.NativeAdAsset;
@@ -109,7 +108,7 @@ public class NativeListViewFragment extends Fragment {
 
         // Set up a renderer for AdMob ads.
         final GooglePlayServicesAdRenderer googlePlayServicesAdRenderer = new GooglePlayServicesAdRenderer(
-                new MediaViewBinder.Builder(R.layout.video_ad_list_item)
+                new GooglePlayServicesViewBinder.Builder(R.layout.video_ad_list_item)
                         .titleId(R.id.native_title)
                         .textId(R.id.native_text)
                         .mediaLayoutId(R.id.native_media_layout)
