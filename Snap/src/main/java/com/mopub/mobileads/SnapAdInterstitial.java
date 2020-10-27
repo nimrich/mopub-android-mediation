@@ -71,6 +71,8 @@ public class SnapAdInterstitial extends BaseAd {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(adData);
 
+        setAutomaticImpressionAndClickTracking(false);
+
         final Map<String, String> extras = adData.getExtras();
 
         if (extras.isEmpty()) {
@@ -137,16 +139,17 @@ public class SnapAdInterstitial extends BaseAd {
         });
 
         mSnapAdapterConfiguration.setCachedInitializationParameters(context, extras);
-        snapAdKit.loadAds();
-
         MoPubLog.log(getAdNetworkId(), LOAD_ATTEMPTED, ADAPTER_NAME);
+
+        snapAdKit.loadAds();
     }
 
     @Override
     protected void show() {
         try {
-            snapAdKit.playAds();
             MoPubLog.log(getAdNetworkId(), SHOW_ATTEMPTED, ADAPTER_NAME);
+
+            snapAdKit.playAds();
         } catch (Exception exception) {
             MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "Failed to show Snap " +
                     "Audience Network Ads");
@@ -157,8 +160,6 @@ public class SnapAdInterstitial extends BaseAd {
             if (mInteractionListener != null) {
                 mInteractionListener.onAdFailed((NETWORK_NO_FILL));
             }
-
-            throw exception;
         }
     }
 
@@ -170,6 +171,6 @@ public class SnapAdInterstitial extends BaseAd {
     @NonNull
     @Override
     protected String getAdNetworkId() {
-        return mSlotId;
+        return TextUtils.isEmpty(mSlotId) ? "" : mSlotId;
     }
 }
