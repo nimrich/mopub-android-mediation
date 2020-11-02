@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.mopub.common.LifecycleListener;
-import com.mopub.common.OnNetworkInitializationFinishedListener;
 import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
 import com.snap.adkit.SnapAdKit;
@@ -42,17 +41,14 @@ public class SnapAdInterstitial extends BaseAd {
 
     private static String mSlotId;
 
-    private SnapAdapterConfiguration mSnapAdapterConfiguration;
+    private final SnapAdAdapterConfiguration mSnapAdAdapterConfiguration;
 
     public SnapAdInterstitial() {
-        mSnapAdapterConfiguration = new SnapAdapterConfiguration();
+        mSnapAdAdapterConfiguration = new SnapAdAdapterConfiguration();
     }
 
     @NonNull
-    private SnapAdKit snapAdKit = AdKitApplication.getSnapAdKit();
-
-    @Nullable
-    OnNetworkInitializationFinishedListener initializationFinishedListener;
+    private final SnapAdKit snapAdKit = AdKitApplication.getSnapAdKit();
 
     @Nullable
     @Override
@@ -138,7 +134,7 @@ public class SnapAdInterstitial extends BaseAd {
             }
         });
 
-        mSnapAdapterConfiguration.setCachedInitializationParameters(context, extras);
+        mSnapAdAdapterConfiguration.setCachedInitializationParameters(context, extras);
         MoPubLog.log(getAdNetworkId(), LOAD_ATTEMPTED, ADAPTER_NAME);
 
         snapAdKit.loadAds();

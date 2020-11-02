@@ -20,8 +20,8 @@ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THRO
 import static com.mopub.mobileads.MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR;
 import static com.mopub.mobileads.MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS;
 
-public class SnapAdapterConfiguration extends BaseAdapterConfiguration {
-    private static final String ADAPTER_NAME = SnapAdapterConfiguration.class.getSimpleName();
+public class SnapAdAdapterConfiguration extends BaseAdapterConfiguration {
+    private static final String ADAPTER_NAME = SnapAdAdapterConfiguration.class.getSimpleName();
     private static final String ADAPTER_VERSION = "1.0.2.0";
     private static final String APP_ID_KEY = "appId";
     private static final String MOPUB_NETWORK_NAME = "snap";
@@ -59,7 +59,7 @@ public class SnapAdapterConfiguration extends BaseAdapterConfiguration {
 
         boolean networkInitializationSucceeded = false;
 
-        synchronized (SnapAdapterConfiguration.class) {
+        synchronized (SnapAdAdapterConfiguration.class) {
             try {
                 if (configuration != null && !configuration.isEmpty()) {
                     AdKitApplication.init(context);
@@ -88,11 +88,11 @@ public class SnapAdapterConfiguration extends BaseAdapterConfiguration {
         }
 
         if (networkInitializationSucceeded) {
-            listener.onNetworkInitializationFinished(SnapAdapterConfiguration.class,
+            listener.onNetworkInitializationFinished(SnapAdAdapterConfiguration.class,
                     MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
             MoPubLog.log(CUSTOM, ADAPTER_NAME, ADAPTER_INITIALIZATION_SUCCESS);
         } else {
-            listener.onNetworkInitializationFinished(SnapAdapterConfiguration.class,
+            listener.onNetworkInitializationFinished(SnapAdAdapterConfiguration.class,
                     MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
             MoPubLog.log(CUSTOM, ADAPTER_NAME, ADAPTER_CONFIGURATION_ERROR);
         }
