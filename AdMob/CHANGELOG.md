@@ -1,4 +1,7 @@
 ## Changelog
+  * 19.5.0.2
+    * Migrate the `MediaLayout` implementation from using `com.mopub.nativeads.MediaLayout` to `com.mopub.nativeads.GooglePlayServicesMediaLayout`. Publishers must use the new `GooglePlayServicesMediaLayout` in their native ad XML.
+
   * 19.5.0.1
     * Prevent oversized banner ads from serving by failing the ad request if the creative's width or height is greater than the publishers-specified width or height.
 
