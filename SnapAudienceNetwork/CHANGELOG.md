@@ -1,4 +1,7 @@
 ## Changelog
+  * 1.0.2.2
+    * Service release. No functionality changes.
+
   * 1.0.2.1
     * Rename `SnapAdapterConfiguration` to `SnapAdAdapterConfiguration` for consistency with remaining adapter class names.
 

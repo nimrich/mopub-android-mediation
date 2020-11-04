@@ -10,6 +10,7 @@ import com.mopub.common.BaseAdapterConfiguration;
 import com.mopub.common.OnNetworkInitializationFinishedListener;
 import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
+import com.mopub.mobileads.snapaudiencenetwork.BuildConfig;
 import com.snap.adkit.SnapAdKit;
 import com.snap.adkit.dagger.AdKitApplication;
 
@@ -22,9 +23,9 @@ import static com.mopub.mobileads.MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS;
 
 public class SnapAdAdapterConfiguration extends BaseAdapterConfiguration {
     private static final String ADAPTER_NAME = SnapAdAdapterConfiguration.class.getSimpleName();
-    private static final String ADAPTER_VERSION = "1.0.2.0";
+    private static final String ADAPTER_VERSION = BuildConfig.VERSION_NAME;
     private static final String APP_ID_KEY = "appId";
-    private static final String MOPUB_NETWORK_NAME = "snap";
+    private static final String MOPUB_NETWORK_NAME = BuildConfig.NETWORK_NAME;
 
     @NonNull
     @Override
