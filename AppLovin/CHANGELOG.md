@@ -1,4 +1,8 @@
 ## Changelog
+* 9.14.8.0
+    * Remove the Context check for old AppLovin SDK versions.
+    * This version of the adapters has been certified with AppLovin 9.14.8 and MoPub SDK 5.14.0.
+
 * 9.14.6.0
     * This version of the adapters has been certified with AppLovin 9.14.6 and MoPub SDK 5.14.0.
 
