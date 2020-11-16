@@ -1,4 +1,7 @@
 ## Changelog
+  * 19.5.0.3
+    * Fail rewarded video playback errors using `VIDEO_PLAYBACK_ERROR` so publishers can request for the next rewarded video.
+
   * 19.5.0.2
     * Migrate the `MediaLayout` implementation from using `com.mopub.nativeads.MediaLayout` to `com.mopub.nativeads.GooglePlayServicesMediaLayout`. Publishers must use the new `GooglePlayServicesMediaLayout` in their native ad XML.
 
