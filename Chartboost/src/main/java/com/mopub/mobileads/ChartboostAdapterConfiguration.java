@@ -22,7 +22,8 @@ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THRO
 
 public class ChartboostAdapterConfiguration extends BaseAdapterConfiguration {
 
-    private static volatile ChartboostShared.ChartboostSingletonDelegate sDelegate = new ChartboostShared.ChartboostSingletonDelegate();
+    private static final ChartboostShared.ChartboostSingletonDelegate sDelegate = 
+            new ChartboostShared.ChartboostSingletonDelegate();
 
     // Chartboost's keys
     private static final String APP_ID_KEY = "appId";
@@ -92,7 +93,8 @@ public class ChartboostAdapterConfiguration extends BaseAdapterConfiguration {
                         Chartboost.startWithAppId(context, appId, appSignature);
                     }
 
-                    Chartboost.setMediation(Chartboost.CBMediation.CBMediationMoPub, MoPub.SDK_VERSION, BuildConfig.VERSION_NAME);
+                    Chartboost.setMediation(Chartboost.CBMediation.CBMediationMoPub,
+                            MoPub.SDK_VERSION, BuildConfig.VERSION_NAME);
                     Chartboost.setDelegate(sDelegate);
                     Chartboost.setAutoCacheAds(false);
                     networkInitializationSucceeded = true;
