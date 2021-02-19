@@ -91,7 +91,7 @@ public class GooglePlayServicesNative extends CustomEventNative {
     /**
      * Flag to determine whether or not the adapter has been initialized.
      */
-    private static AtomicBoolean sIsInitialized = new AtomicBoolean(false);
+    private static final AtomicBoolean sIsInitialized = new AtomicBoolean(false);
 
     /**
      * String to store the AdMob ad unit ID.
@@ -99,7 +99,7 @@ public class GooglePlayServicesNative extends CustomEventNative {
     private static String mAdUnitId;
 
     @NonNull
-    private GooglePlayServicesAdapterConfiguration mGooglePlayServicesAdapterConfiguration;
+    private final GooglePlayServicesAdapterConfiguration mGooglePlayServicesAdapterConfiguration;
 
     public GooglePlayServicesNative() {
         mGooglePlayServicesAdapterConfiguration = new GooglePlayServicesAdapterConfiguration();
@@ -140,7 +140,7 @@ public class GooglePlayServicesNative extends CustomEventNative {
      * The {@link GooglePlayServicesNativeAd} class is used to load and map Google native
      * ads to MoPub native ads.
      */
-    static class GooglePlayServicesNativeAd extends BaseNativeAd {
+    public static class GooglePlayServicesNativeAd extends BaseNativeAd {
 
         // Native ad assets.
         private String mTitle;
@@ -343,17 +343,13 @@ public class GooglePlayServicesNative extends CustomEventNative {
 
             final NativeAdOptions.Builder optionsBuilder = new NativeAdOptions.Builder();
 
-            // MoPub requires the images to be pre-cached using their APIs, so we do not want
-            // Google to download the image assets.
-            optionsBuilder.setReturnUrlsForImageAssets(true);
-
             // MoPub allows for only one image, so only request for one image.
             optionsBuilder.setRequestMultipleImages(false);
 
             // Get the preferred image orientation from the local extras.
             if (localExtras.containsKey(KEY_EXTRA_ORIENTATION_PREFERENCE)
                     && isValidOrientationExtra(localExtras.get(KEY_EXTRA_ORIENTATION_PREFERENCE))) {
-                optionsBuilder.setImageOrientation(
+                optionsBuilder.setMediaAspectRatio(
                         (int) localExtras.get(KEY_EXTRA_ORIENTATION_PREFERENCE));
             }
 
@@ -525,9 +521,9 @@ public class GooglePlayServicesNative extends CustomEventNative {
                 return false;
             }
             Integer preference = (Integer) extra;
-            return (preference == NativeAdOptions.ORIENTATION_ANY
-                    || preference == NativeAdOptions.ORIENTATION_LANDSCAPE
-                    || preference == NativeAdOptions.ORIENTATION_PORTRAIT);
+            return (preference == NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_ANY
+                    || preference == NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_LANDSCAPE
+                    || preference == NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_PORTRAIT);
         }
 
         /**
