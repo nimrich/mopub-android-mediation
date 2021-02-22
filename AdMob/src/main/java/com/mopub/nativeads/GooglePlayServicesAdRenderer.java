@@ -121,15 +121,15 @@ public class GooglePlayServicesAdRenderer implements MoPubAdRenderer<GooglePlayS
      * This method will add the given Google native ad view into the view hierarchy of the given
      * MoPub native ad view.
      *
-     * @param googleNativeAdView  Google's native ad view to be added as a parent to the MoPub's
-     *                            view.
-     * @param moPubNativeAdView   MoPub's native ad view created by this renderer.
-     * @param swapMargins         {@code true} if the margins need to be swapped, {@code false}
-     *                            otherwise.
+     * @param googleNativeAdView Google's native ad view to be added as a parent to the MoPub's
+     *                           view.
+     * @param moPubNativeAdView  MoPub's native ad view created by this renderer.
+     * @param swapMargins        {@code true} if the margins need to be swapped, {@code false}
+     *                           otherwise.
      */
     private static void insertGoogleNativeAdView(NativeAdView googleNativeAdView,
-                                                  View moPubNativeAdView,
-                                                  boolean swapMargins) {
+                                                 View moPubNativeAdView,
+                                                 boolean swapMargins) {
 
         MoPubLog.log(SHOW_ATTEMPTED, ADAPTER_NAME);
 
