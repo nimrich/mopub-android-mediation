@@ -1,4 +1,7 @@
 ## Changelog
+  * 19.7.0.1
+    * Service release. No code changes.
+
   * 19.7.0.0
     * This version of the adapters has been certified with AdMob 19.7.0 and MoPub 5.16.0.
     * Refactor interstitial, rewarded video, and native based on new API guidelines from Google. No action items for publishers.
