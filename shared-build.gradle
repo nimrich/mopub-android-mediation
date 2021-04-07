@@ -92,7 +92,7 @@ uploadArchives {
             }
         }
         repository(url: "https://oss.sonatype.org/content/groups/staging") {
-            authentication(userName: project.ossrhUsername, password: project.ossrhPassword)
+            authentication(userName: System.getenv("SONATYPE_USER"), password: System.getenv("SONATYPE_PASS"))
         }
         beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
     }
