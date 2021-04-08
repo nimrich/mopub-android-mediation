@@ -62,7 +62,7 @@ signing {
 
 uploadArchives {
     repositories.mavenDeployer {
-        pom.groupId = project.group
+        pom.groupId = 'com.mopub.mediation'
         pom.artifactId = project.ext.artifactName
         pom.version = project.version
         pom.project {
