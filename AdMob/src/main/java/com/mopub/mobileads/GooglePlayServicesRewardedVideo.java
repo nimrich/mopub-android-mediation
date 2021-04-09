@@ -303,7 +303,9 @@ public class GooglePlayServicesRewardedVideo extends BaseAd {
                     }
 
                     @Override
-                    public void onAdFailedToShowFullScreenContent(AdError adError) {
+                    public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                        Preconditions.checkNotNull(adError);
+
                         MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "Failed to show " +
                                 "Google rewarded video. " + adError.getMessage());
 
@@ -410,6 +412,8 @@ public class GooglePlayServicesRewardedVideo extends BaseAd {
         }
 
         public GooglePlayServicesMediationSettings(@NonNull Bundle bundle) {
+            Preconditions.checkNotNull(bundle);
+
             if (bundle.containsKey(KEY_CONTENT_URL)) {
                 contentUrl = bundle.getString(KEY_CONTENT_URL);
             }

@@ -1,4 +1,7 @@
 ## Changelog
+  * 20.0.0.0
+    * This version of the adapters has been certified with AdMob 20.0.0 and MoPub 5.16.4.
+
   * 19.8.0.0
     * This version of the adapters has been certified with AdMob 19.8.0 and MoPub 5.16.3.
     * Align impression tracking for non-native ad formats based on Google's `onAdImpression()` callback.

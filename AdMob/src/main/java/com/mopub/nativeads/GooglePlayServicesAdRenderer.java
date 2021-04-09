@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.ads.nativead.AdChoicesView;
 import com.google.android.gms.ads.nativead.MediaView;
 import com.google.android.gms.ads.nativead.NativeAdView;
+import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.nativeads.GooglePlayServicesNative.GooglePlayServicesNativeAd;
 
@@ -91,6 +92,8 @@ public class GooglePlayServicesAdRenderer implements MoPubAdRenderer<GooglePlayS
     @NonNull
     @Override
     public View createAdView(@NonNull Context context, @Nullable ViewGroup parent) {
+        Preconditions.checkNotNull(context);
+
         View view = LayoutInflater.from(context).inflate(mViewBinder.layoutId, parent, false);
         // Create a frame layout and add the inflated view as a child. This will allow us to add
         // the Google native ad view into the view hierarchy at render time.
@@ -105,6 +108,9 @@ public class GooglePlayServicesAdRenderer implements MoPubAdRenderer<GooglePlayS
     @Override
     public void renderAdView(@NonNull View view,
                              @NonNull GooglePlayServicesNativeAd nativeAd) {
+        Preconditions.checkNotNull(view);
+        Preconditions.checkNotNull(nativeAd);
+
         GoogleStaticNativeViewHolder viewHolder = mViewHolderMap.get(view);
         if (viewHolder == null) {
             viewHolder = GoogleStaticNativeViewHolder.fromViewBinder(view, mViewBinder);
@@ -226,6 +232,8 @@ public class GooglePlayServicesAdRenderer implements MoPubAdRenderer<GooglePlayS
 
     @Override
     public boolean supports(@NonNull BaseNativeAd nativeAd) {
+        Preconditions.checkNotNull(nativeAd);
+
         return nativeAd instanceof GooglePlayServicesNativeAd;
     }
 
@@ -262,6 +270,9 @@ public class GooglePlayServicesAdRenderer implements MoPubAdRenderer<GooglePlayS
         public static GoogleStaticNativeViewHolder fromViewBinder(@NonNull View view,
                                                                   @NonNull GooglePlayServicesViewBinder
                                                                           viewBinder) {
+            Preconditions.checkNotNull(view);
+            Preconditions.checkNotNull(viewBinder);
+
             final GoogleStaticNativeViewHolder viewHolder = new GoogleStaticNativeViewHolder();
             viewHolder.mMainView = view;
             try {

@@ -178,6 +178,9 @@ public class GooglePlayServicesBanner extends BaseAd {
     @Override
     protected boolean checkAndInitializeSdk(@NonNull final Activity launcherActivity,
                                             @NonNull final AdData adData) {
+        Preconditions.checkNotNull(launcherActivity);
+        Preconditions.checkNotNull(adData);
+
         return false;
     }
 
