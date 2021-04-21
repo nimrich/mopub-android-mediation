@@ -1,4 +1,7 @@
 ## Changelog
+  * 3.5.0.5.0
+     * This version of the adapters has been certified with Pangle 3.5.0.5 and MoPub SDK 5.16.4.
+
   * 3.4.1.1.1
      * Pass `AdCallSource` data for Pangle SDK to collect ad source information.
 
