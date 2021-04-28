@@ -1,4 +1,7 @@
 ## Changelog
+  * 20.0.0.1
+    * Set MediaView's scale type to `CENTER_CROP` to fix native ad alignment issues.
+
   * 20.0.0.0
     * This version of the adapters has been certified with AdMob 20.0.0 and MoPub 5.16.4.
 
