@@ -67,7 +67,7 @@ uploadArchives {
         pom.version = project.version
         pom.project {
             name 'MoPub Network Mediation'
-            description 'Adapter classes to mediate networks on MoPub.'
+            description "${project.name} Adapter for MoPub Mediation"
             url 'https://github.com/mopub/mopub-android-mediation'
 
             scm {
@@ -90,6 +90,10 @@ uploadArchives {
                     email 'support@mopub.com'
                 }
             }
+        }
+
+         pom.whenConfigured {
+            pom -> pom.dependencies.clear()
         }
         repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
             authentication(userName: System.getenv("SONATYPE_USER"), password: System.getenv("SONATYPE_PASS"))
