@@ -1,4 +1,7 @@
 ## Changelog
+  * 20.0.0.2
+   * Remove mopub-sdk as a required dependency from POM file.
+
   * 20.0.0.1
     * Set MediaView's scale type to `CENTER_CROP` to fix native ad alignment issues.
 
