@@ -1,4 +1,7 @@
 ## Changelog
+  * 3.5.0.5.1
+    * Remove mopub-sdk as a required dependency from POM file.
+
   * 3.5.0.5.0
      * This version of the adapters has been certified with Pangle 3.5.0.5 and MoPub SDK 5.16.4.
 
