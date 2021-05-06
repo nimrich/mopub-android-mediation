@@ -1,4 +1,4 @@
-project.version = '9.1.7.1'
+project.version = '9.1.9.0'
 project.ext.networkName = 'inmobi_sdk'
 
 apply from: '../shared-build.gradle'
