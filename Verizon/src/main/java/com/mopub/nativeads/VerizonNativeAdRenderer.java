@@ -33,7 +33,6 @@ public class VerizonNativeAdRenderer implements MoPubAdRenderer<VerizonNative.Ve
     @Nullable
     private VideoPlayer videoPlayer;
 
-
     /**
      * Constructs a native ad renderer with a view binder.
      *
@@ -138,7 +137,7 @@ public class VerizonNativeAdRenderer implements MoPubAdRenderer<VerizonNative.Ve
             if (extras != null && verizonNativeViewHolder.videoView != null) {
 
                 final NativeVideoComponent nativeVideoComponent = (NativeVideoComponent) verizonNativeAd.getNativeAd().getComponent(
-                    "video");
+                        "video");
                 videoPlayer = nativeVideoComponent.getVideoPlayer(context);
                 final VideoPlayerView videoPlayerView = new VideoPlayerView(verizonNativeViewHolder.videoView.getContext());
                 final FrameLayout.LayoutParams videoParams = new FrameLayout.LayoutParams(FrameLayout
