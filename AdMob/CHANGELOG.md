@@ -1,9 +1,9 @@
 ## Changelog
   * 20.1.0.0
-   * This version of the adapters has been certified with AdMob 20.1.0 and MoPub 5.16.4.
+     * This version of the adapters has been certified with AdMob 20.1.0 and MoPub 5.16.4.
 
   * 20.0.0.2
-   * Remove mopub-sdk as a required dependency from POM file.
+     * Remove mopub-sdk as a required dependency from POM file.
 
   * 20.0.0.1
     * Set MediaView's scale type to `CENTER_CROP` to fix native ad alignment issues.
