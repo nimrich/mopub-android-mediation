@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.mopub.nativeads.FacebookAdRenderer;
 import com.mopub.nativeads.GooglePlayServicesAdRenderer;
 import com.mopub.nativeads.GooglePlayServicesViewBinder;
+import com.mopub.nativeads.MintegralAdRenderer;
 import com.mopub.nativeads.MoPubAdAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.PangleAdRenderer;
@@ -136,9 +137,20 @@ public class NativeListViewFragment extends Fragment {
                         .adChoicesRelativeLayoutId(R.id.native_privacy_information_icon_layout)
                         .build());
 
+        // Set up a renderer for Mintegral ads
+        final MintegralAdRenderer mintegralAdRenderer = new MintegralAdRenderer(
+                new MintegralAdRenderer.ViewBinder.Builder(R.layout.native_ad_list_item)
+                        .titleId(R.id.native_title)
+                        .textId(R.id.native_text)
+                        .mainImageId(R.id.native_main_image)
+                        .iconImageId(R.id.native_icon_image)
+                        .callToActionId(R.id.native_cta)
+                        .build());
+
         // Register the renderers with the MoPubAdAdapter and then set the adapter on the ListView.
         // The first renderer that can handle a particular native ad gets used.
         // We are prioritizing network renderers.
+        mAdAdapter.registerAdRenderer(mintegralAdRenderer);
         mAdAdapter.registerAdRenderer(referenceNativeAdRenderer);
         mAdAdapter.registerAdRenderer(verizonNativeAdRenderer);
         mAdAdapter.registerAdRenderer(googlePlayServicesAdRenderer);

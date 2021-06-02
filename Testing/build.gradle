@@ -25,6 +25,7 @@ dependencies {
                    project(':Fyber'),
                    project(':IronSource'),
                    project(':Ogury'),
+                   project(':Mintegral'),
                    project(':Pangle'),
                    project(':ReferenceNetwork'),
                    project(':Tapjoy'),

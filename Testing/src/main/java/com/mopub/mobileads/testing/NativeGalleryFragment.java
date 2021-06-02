@@ -20,6 +20,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.mopub.nativeads.FacebookAdRenderer;
 import com.mopub.nativeads.GooglePlayServicesAdRenderer;
 import com.mopub.nativeads.GooglePlayServicesViewBinder;
+import com.mopub.nativeads.MintegralAdRenderer;
 import com.mopub.nativeads.MoPubNativeAdLoadedListener;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.MoPubStreamAdPlacer;
@@ -134,11 +135,22 @@ public class NativeGalleryFragment extends Fragment implements MoPubNativeAdLoad
                         .adChoicesRelativeLayoutId(R.id.native_privacy_information_icon_layout)
                         .build());
 
+        // Set up a renderer for Mintegral ads
+        final MintegralAdRenderer mintegralAdRenderer = new MintegralAdRenderer(
+                new MintegralAdRenderer.ViewBinder.Builder(R.layout.native_ad_list_item)
+                        .titleId(R.id.native_title)
+                        .textId(R.id.native_text)
+                        .mainImageId(R.id.native_main_image)
+                        .iconImageId(R.id.native_icon_image)
+                        .callToActionId(R.id.native_cta)
+                        .build());
+
         // This ad placer is used to automatically insert ads into the ViewPager.
         mStreamAdPlacer = new MoPubStreamAdPlacer(getActivity());
 
         // The first renderer that can handle a particular native ad gets used.
         // We are prioritizing network renderers.
+        mStreamAdPlacer.registerAdRenderer(mintegralAdRenderer);
         mStreamAdPlacer.registerAdRenderer(verizonNativeAdRenderer);
         mStreamAdPlacer.registerAdRenderer(googlePlayServicesAdRenderer);
         mStreamAdPlacer.registerAdRenderer(facebookAdRenderer);
