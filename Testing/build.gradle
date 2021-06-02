@@ -24,6 +24,7 @@ dependencies {
                    project(':FacebookAudienceNetwork'),
                    project(':Fyber'),
                    project(':IronSource'),
+                   project(':Ogury'),
                    project(':Pangle'),
                    project(':ReferenceNetwork'),
                    project(':Tapjoy'),
