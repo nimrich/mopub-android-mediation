@@ -239,8 +239,6 @@ public class FyberRewardedVideo extends BaseAd {
             mLoadListener.onAdLoadFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
         }
 
-        FyberAdapterConfiguration.updateGdprConsentStatus();
-
         if (mRewardedSpot != null) {
             mRewardedSpot.destroy();
         }

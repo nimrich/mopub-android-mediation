@@ -222,8 +222,6 @@ public class FyberInterstitial extends BaseAd {
   private void requestInterstitial(final Context context, String spotId, Map<String, String> localExtras) {
     mContext = context;
 
-    FyberAdapterConfiguration.updateGdprConsentStatus();
-
     if (mInterstitialSpot != null) {
       mInterstitialSpot.destroy();
     }

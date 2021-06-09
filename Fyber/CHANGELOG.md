@@ -1,4 +1,7 @@
 ## Changelog
+  * 7.8.2.1
+    * Do not pass GDPR consent data to Fyber via adapters.
+
   * 7.8.2.0
     * Add support for banner, interstitial and rewarded video.
     * This version of the adapters has been certified with Fyber Marketplace 7.8.2 and MoPub 5.17.0.
