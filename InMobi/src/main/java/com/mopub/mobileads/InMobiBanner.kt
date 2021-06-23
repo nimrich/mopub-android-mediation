@@ -27,6 +27,11 @@ class InMobiBanner : BaseAd() {
     private var mPlacementId: Long? = null
     private var mInMobiBanner: InMobiBanner? = null
     private var mInMobiBannerContainer: FrameLayout? = null
+    private var mInMobiAdapterConfiguration: InMobiAdapterConfiguration? = null
+
+    init {
+        mInMobiAdapterConfiguration = InMobiAdapterConfiguration()
+    }
 
     override fun onInvalidate() {
         MoPubLog.log(AdapterLogEvent.CUSTOM, ADAPTER_NAME, "InMobi banner destroyed")
@@ -64,6 +69,8 @@ class InMobiBanner : BaseAd() {
                         ADAPTER_NAME, mLoadListener, null)
             return
         }
+
+        mInMobiAdapterConfiguration?.setCachedInitializationParameters(context, extras)
 
         InMobiAdapterConfiguration.initializeInMobi(extras, context, object : InMobiAdapterConfiguration.InMobiInitCompletionListener {
             override fun onSuccess() {

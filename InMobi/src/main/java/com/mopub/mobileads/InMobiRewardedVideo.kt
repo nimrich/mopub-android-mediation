@@ -24,6 +24,11 @@ class InMobiRewardedVideo : BaseAd() {
 
     private var mPlacementId: Long? = null
     private var mInMobiRewardedVideo: InMobiInterstitial? = null
+    private var mInMobiAdapterConfiguration: InMobiAdapterConfiguration? = null
+
+    init {
+        mInMobiAdapterConfiguration = InMobiAdapterConfiguration()
+    }
 
     override fun onInvalidate() {
         MoPubLog.log(AdapterLogEvent.CUSTOM, ADAPTER_NAME, "InMobi rewarded video destroyed")
@@ -57,6 +62,8 @@ class InMobiRewardedVideo : BaseAd() {
                     ADAPTER_NAME, mLoadListener, null)
             return
         }
+
+        mInMobiAdapterConfiguration?.setCachedInitializationParameters(context, extras)
 
         InMobiAdapterConfiguration.initializeInMobi(extras, context, object : InMobiAdapterConfiguration.InMobiInitCompletionListener {
             override fun onSuccess() {
@@ -147,11 +154,10 @@ class InMobiRewardedVideo : BaseAd() {
                         }
                     }
 
-                    MoPubLog.log(adNetworkId, AdapterLogEvent.CUSTOM, ADAPTER_NAME,
-                            "Failed to reward user with reward as rewards dictionary received is empty. " +
-                                    "There are no proper rewards set on your InMobi ad with placementId: " + adNetworkId +
-                                    "Please ensure your InMobi ad's rewards settings are correct.")
-                    mInteractionListener?.onAdComplete(MoPubReward.failure())
+                    MoPubLog.log(adNetworkId, AdapterLogEvent.SHOULD_REWARD, ADAPTER_NAME,
+                            MoPubReward.DEFAULT_REWARD_AMOUNT, MoPubReward.NO_REWARD_LABEL)
+
+                    mInteractionListener?.onAdComplete(MoPubReward.success(MoPubReward.NO_REWARD_LABEL, MoPubReward.DEFAULT_REWARD_AMOUNT))
                 }
             })
 
