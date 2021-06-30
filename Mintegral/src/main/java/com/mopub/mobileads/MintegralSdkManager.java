@@ -104,12 +104,11 @@ public final class MintegralSdkManager {
         }
 
         @Override
-        public void onInitFail() {
+        public void onInitFail(String errorMsg) {
             currentState = MBSDKInitializeState.SDK_STATE_INITIALIZE_FAILURE;
 
             if (null != sdkInitializeListener) {
-                sdkInitializeListener.onInitializeFailure("Mintegral initialization failed due to " +
-                        "unknown reasons.");
+                sdkInitializeListener.onInitializeFailure("Mintegral initialization failed: " + errorMsg);
             }
         }
     }

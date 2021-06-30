@@ -10,7 +10,9 @@ import androidx.annotation.Nullable;
 import com.mbridge.msdk.MBridgeConstans;
 import com.mbridge.msdk.out.MBBidRewardVideoHandler;
 import com.mbridge.msdk.out.MBRewardVideoHandler;
+import com.mbridge.msdk.out.MBridgeIds;
 import com.mbridge.msdk.out.MBridgeSDKFactory;
+import com.mbridge.msdk.out.RewardInfo;
 import com.mbridge.msdk.out.RewardVideoListener;
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.MoPubReward;
@@ -210,13 +212,44 @@ public class MintegralRewardedVideo extends BaseAd implements RewardVideoListene
     }
 
     @Override
-    public void onAdClose(boolean b, String label, float amount) {
-        if (b) {
+    public void onVideoLoadSuccess(MBridgeIds mBridgeIds) {
+        if (mLoadListener != null) {
+            mLoadListener.onAdLoaded();
+        }
+
+        MoPubLog.log(getAdNetworkId(), LOAD_SUCCESS, ADAPTER_NAME);
+    }
+
+    @Override
+    public void onLoadSuccess(MBridgeIds mBridgeIds) {
+    }
+
+    @Override
+    public void onVideoLoadFail(MBridgeIds mBridgeIds, String errorMsg) {
+        MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onVideoLoadFail: " + errorMsg);
+        failAdapter(LOAD_FAILED, UNSPECIFIED, errorMsg, true);
+    }
+
+    @Override
+    public void onAdShow(MBridgeIds mBridgeIds) {
+        if (mInteractionListener != null) {
+            mInteractionListener.onAdShown();
+            mInteractionListener.onAdImpression();
+        }
+
+        MoPubLog.log(getAdNetworkId(), SHOW_SUCCESS, ADAPTER_NAME);
+    }
+
+    @Override
+    public void onAdClose(MBridgeIds mBridgeIds, RewardInfo rewardInfo) {
+        if (rewardInfo != null) {
             if (mInteractionListener != null) {
-                mInteractionListener.onAdComplete(MoPubReward.success(label, (int) amount));
+                mInteractionListener.onAdComplete(MoPubReward.success(rewardInfo.getRewardName(),
+                        Integer.parseInt(rewardInfo.getRewardAmount())));
             }
 
-            MoPubLog.log(getAdNetworkId(), SHOULD_REWARD, ADAPTER_NAME, amount, label);
+            MoPubLog.log(getAdNetworkId(), SHOULD_REWARD, ADAPTER_NAME,
+                    Integer.parseInt(rewardInfo.getRewardAmount()), rewardInfo.getRewardName());
         }
 
         if (mInteractionListener != null) {
@@ -227,42 +260,12 @@ public class MintegralRewardedVideo extends BaseAd implements RewardVideoListene
     }
 
     @Override
-    public void onVideoLoadSuccess(String placementId, String unitId) {
-        if (mLoadListener != null) {
-            mLoadListener.onAdLoaded();
-        }
-
-        MoPubLog.log(getAdNetworkId(), LOAD_SUCCESS, ADAPTER_NAME);
-    }
-
-    @Override
-    public void onLoadSuccess(String placementId, String unitId) {
-        // NO-OP
-    }
-
-    @Override
-    public void onVideoLoadFail(String errorMsg) {
-        MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onVideoLoadFail: " + errorMsg);
-        failAdapter(LOAD_FAILED, UNSPECIFIED, errorMsg, true);
-    }
-
-    @Override
-    public void onAdShow() {
-        if (mInteractionListener != null) {
-            mInteractionListener.onAdShown();
-            mInteractionListener.onAdImpression();
-        }
-
-        MoPubLog.log(getAdNetworkId(), SHOW_SUCCESS, ADAPTER_NAME);
-    }
-
-    @Override
-    public void onShowFail(String errorMsg) {
+    public void onShowFail(MBridgeIds mBridgeIds, String errorMsg) {
         failAdapter(SHOW_FAILED, MoPubErrorCode.AD_SHOW_ERROR, errorMsg, false);
     }
 
     @Override
-    public void onVideoAdClicked(String placementId, String unitId) {
+    public void onVideoAdClicked(MBridgeIds mBridgeIds) {
         if (mInteractionListener != null) {
             mInteractionListener.onAdClicked();
         }
@@ -271,14 +274,12 @@ public class MintegralRewardedVideo extends BaseAd implements RewardVideoListene
     }
 
     @Override
-    public void onEndcardShow(String placementId, String unitId) {
-        MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onEndcardShow: " + placementId
-                + ", " + unitId);
+    public void onVideoComplete(MBridgeIds mBridgeIds) {
+        MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onVideoComplete: " + mBridgeIds);
     }
 
     @Override
-    public void onVideoComplete(String placementId, String unitId) {
-        MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onVideoComplete: " + placementId
-                + ", " + unitId);
+    public void onEndcardShow(MBridgeIds mBridgeIds) {
+        MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onEndcardShow: " + mBridgeIds);
     }
 }

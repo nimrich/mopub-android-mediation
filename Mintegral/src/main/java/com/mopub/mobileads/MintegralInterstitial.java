@@ -11,7 +11,9 @@ import com.mbridge.msdk.MBridgeConstans;
 import com.mbridge.msdk.interstitialvideo.out.InterstitialVideoListener;
 import com.mbridge.msdk.interstitialvideo.out.MBBidInterstitialVideoHandler;
 import com.mbridge.msdk.interstitialvideo.out.MBInterstitialVideoHandler;
+import com.mbridge.msdk.out.MBridgeIds;
 import com.mbridge.msdk.out.MBridgeSDKFactory;
+import com.mbridge.msdk.out.RewardInfo;
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
@@ -207,7 +209,11 @@ public class MintegralInterstitial extends BaseAd implements InterstitialVideoLi
     }
 
     @Override
-    public void onVideoLoadSuccess(String placementId, String s) {
+    public void onLoadSuccess(MBridgeIds mBridgeIds) {
+    }
+
+    @Override
+    public void onVideoLoadSuccess(MBridgeIds mBridgeIds) {
         MoPubLog.log(getAdNetworkId(), LOAD_SUCCESS, ADAPTER_NAME);
 
         if (mLoadListener != null) {
@@ -216,12 +222,12 @@ public class MintegralInterstitial extends BaseAd implements InterstitialVideoLi
     }
 
     @Override
-    public void onVideoLoadFail(String errorMsg) {
+    public void onVideoLoadFail(MBridgeIds mBridgeIds, String errorMsg) {
         failAdapter(LOAD_FAILED, UNSPECIFIED, errorMsg, true);
     }
 
     @Override
-    public void onAdShow() {
+    public void onAdShow(MBridgeIds mBridgeIds) {
         MoPubLog.log(getAdNetworkId(), SHOW_SUCCESS, ADAPTER_NAME);
 
         if (mInteractionListener != null) {
@@ -231,13 +237,7 @@ public class MintegralInterstitial extends BaseAd implements InterstitialVideoLi
     }
 
     @Override
-    public void onShowFail(String errorMsg) {
-        failAdapter(SHOW_FAILED, MoPubErrorCode.AD_SHOW_ERROR, "Failed to show Mintegral interstitial: "
-                + errorMsg, false);
-    }
-
-    @Override
-    public void onAdClose(boolean b) {
+    public void onAdClose(MBridgeIds mBridgeIds, RewardInfo rewardInfo) {
         MoPubLog.log(getAdNetworkId(), DID_DISAPPEAR, ADAPTER_NAME);
 
         if (mInteractionListener != null) {
@@ -246,7 +246,13 @@ public class MintegralInterstitial extends BaseAd implements InterstitialVideoLi
     }
 
     @Override
-    public void onVideoAdClicked(String placementId, String message) {
+    public void onShowFail(MBridgeIds mBridgeIds, String errorMsg) {
+        failAdapter(SHOW_FAILED, MoPubErrorCode.AD_SHOW_ERROR, "Failed to show Mintegral interstitial: "
+                + errorMsg, false);
+    }
+
+    @Override
+    public void onVideoAdClicked(MBridgeIds mBridgeIds) {
         MoPubLog.log(getAdNetworkId(), CLICKED, ADAPTER_NAME);
 
         if (mInteractionListener != null) {
@@ -255,33 +261,17 @@ public class MintegralInterstitial extends BaseAd implements InterstitialVideoLi
     }
 
     @Override
-    public void onEndcardShow(String placementId, String message) {
+    public void onVideoComplete(MBridgeIds mBridgeIds) {
+        MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onVideoComplete");
+    }
+
+    @Override
+    public void onAdCloseWithIVReward(MBridgeIds mBridgeIds, RewardInfo rewardInfo) {
+        MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdCloseWithIVReward");
+    }
+
+    @Override
+    public void onEndcardShow(MBridgeIds mBridgeIds) {
         MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onEndcardShow");
-    }
-
-    @Override
-    public void onVideoComplete(String placementId, String message) {
-        MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onVideoComplete: " + message);
-    }
-
-    @Override
-    public void onAdCloseWithIVReward(boolean isComplete, int rewardAlertStatus) {
-        String rewardStatus = null;
-
-        if (rewardAlertStatus == MBridgeConstans.IVREWARDALERT_STATUS_NOTSHOWN) {
-            rewardStatus = "The dialog was not shown.";
-        } else if (rewardAlertStatus == MBridgeConstans.IVREWARDALERT_STATUS_CLICKCONTINUE) {
-            rewardStatus = "The dialog's continue button was clicked.";
-        } else if (rewardAlertStatus == MBridgeConstans.IVREWARDALERT_STATUS_CLICKCANCEL) {
-            rewardStatus = "The dialog's cancel button was clicked.";
-        }
-
-        MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, isComplete ? "Video playback is " +
-                "complete." : "Video playback is not complete. " + rewardStatus);
-    }
-
-    @Override
-    public void onLoadSuccess(String placementId, String message) {
-        // NO-OP
     }
 }

@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import com.mbridge.msdk.out.BannerAdListener;
 import com.mbridge.msdk.out.BannerSize;
 import com.mbridge.msdk.out.MBBannerView;
+import com.mbridge.msdk.out.MBridgeIds;
 import com.mbridge.msdk.out.MBridgeSDKFactory;
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.Preconditions;
@@ -194,12 +195,17 @@ public class MintegralBanner extends BaseAd implements BannerAdListener {
     }
 
     @Override
-    public void onLoadFailed(String errorMsg) {
+    protected View getAdView() {
+        return mBannerAd;
+    }
+
+    @Override
+    public void onLoadFailed(MBridgeIds mBridgeIds, String errorMsg) {
         failAdapter(NETWORK_NO_FILL, errorMsg);
     }
 
     @Override
-    public void onLoadSuccessed() {
+    public void onLoadSuccessed(MBridgeIds mBridgeIds) {
         if (mLoadListener != null && mBannerAd != null) {
             mLoadListener.onAdLoaded();
             mBannerAd.setVisibility(View.VISIBLE);
@@ -210,12 +216,7 @@ public class MintegralBanner extends BaseAd implements BannerAdListener {
     }
 
     @Override
-    protected View getAdView() {
-        return mBannerAd;
-    }
-
-    @Override
-    public void onLogImpression() {
+    public void onLogImpression(MBridgeIds mBridgeIds) {
         if (mInteractionListener != null) {
             mInteractionListener.onAdImpression();
         }
@@ -223,9 +224,8 @@ public class MintegralBanner extends BaseAd implements BannerAdListener {
         MoPubLog.log(getAdNetworkId(), SHOW_SUCCESS, ADAPTER_NAME);
     }
 
-
     @Override
-    public void onClick() {
+    public void onClick(MBridgeIds mBridgeIds) {
         if (mInteractionListener != null) {
             mInteractionListener.onAdClicked();
         }
@@ -234,24 +234,24 @@ public class MintegralBanner extends BaseAd implements BannerAdListener {
     }
 
     @Override
-    public void onLeaveApp() {
+    public void onLeaveApp(MBridgeIds mBridgeIds) {
     }
 
     @Override
-    public void showFullScreen() {
+    public void showFullScreen(MBridgeIds mBridgeIds) {
         if (mInteractionListener != null) {
             mInteractionListener.onAdExpanded();
         }
     }
 
     @Override
-    public void closeFullScreen() {
+    public void closeFullScreen(MBridgeIds mBridgeIds) {
         if (mInteractionListener != null) {
             mInteractionListener.onAdCollapsed();
         }
     }
 
     @Override
-    public void onCloseBanner() {
+    public void onCloseBanner(MBridgeIds mBridgeIds) {
     }
 }
