@@ -1,4 +1,7 @@
 ## Changelog
+ * 7.1.6.1.0
+    * This version of the adapters has been certified with ironSource 7.1.6.1 and MoPub SDK 5.17.0.
+
  * 7.1.6.0
     * This version of the adapters has been certified with ironSource 7.1.6 and MoPub SDK 5.17.0.
     * ironSource's artifacts are now distributed via GitHub. For migration information, visit [this article](https://developers.ironsrc.com/ironsource-mobile/android/ironsource-artifacts-github/).
