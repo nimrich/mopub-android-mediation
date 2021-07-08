@@ -1,4 +1,8 @@
 ## Changelog
+  * 3.7.1.3.0
+     * Remove methods deprecated by Pangle.
+     * This version of the adapters has been certified with Pangle 3.7.1.3 and MoPub SDK 5.17.0.
+
   * 3.6.0.4.1
      * Optimize banner size mapping.
 
