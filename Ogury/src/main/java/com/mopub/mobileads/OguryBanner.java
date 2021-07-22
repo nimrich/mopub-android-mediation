@@ -112,8 +112,6 @@ public class OguryBanner extends BaseAd implements OguryBannerAdListener, OguryA
             mBanner.destroy();
             mBanner = null;
         }
-
-        mListenerHelper = null;
     }
 
     public static OguryBannerAdSize getBannerAdSize(Integer iAdWidth, Integer iAdHeight) {
