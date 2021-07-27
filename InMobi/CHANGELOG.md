@@ -1,4 +1,7 @@
 ## Changelog
+  * 9.2.0.0
+      * This version of the adapters has been certified with InMobi 9.2.0 and MoPub SDK 5.17.0.
+
   * 9.1.9.1
       * Cache network information from the MoPub dashboard for subsequent ad requests.
       * Reward user when `onRewardsUnlocked` is called whether reward key value set is empty.
