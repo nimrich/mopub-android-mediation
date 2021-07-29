@@ -8,9 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.mopub.common.LifecycleListener;
+import com.mopub.common.MoPub;
 import com.mopub.common.MoPubReward;
 import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
+import com.mopub.common.privacy.ConsentStatus;
+import com.mopub.common.privacy.PersonalInfoManager;
+import com.ogury.cm.OguryChoiceManagerExternal;
 import com.ogury.core.OguryError;
 import com.ogury.ed.OguryAdImpressionListener;
 import com.ogury.ed.OguryOptinVideoAd;
@@ -63,6 +67,17 @@ public class OguryRewardedVideo extends BaseAd implements OguryOptinVideoAdListe
     protected void load(@NonNull Context context, @NonNull AdData adData) {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(adData);
+
+        final PersonalInfoManager personalInfoManager = MoPub.getPersonalInformationManager();
+
+        if (personalInfoManager != null) {
+            final boolean consentIsUnknown = personalInfoManager.getPersonalInfoConsentStatus() == ConsentStatus.UNKNOWN;
+            final boolean canCollectPersonalInfo = MoPub.canCollectPersonalInformation();
+
+            if (OguryAdapterConfiguration.initialized() && !consentIsUnknown) {
+                OguryChoiceManagerExternal.setConsent(canCollectPersonalInfo, OguryAdapterConfiguration.CHOICE_MANAGER_CONSENT_ORIGIN);
+            }
+        }
 
         setAutomaticImpressionAndClickTracking(false);
 
