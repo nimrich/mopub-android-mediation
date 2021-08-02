@@ -55,6 +55,7 @@ public class FyberBanner extends BaseAd {
 
   private void requestBanner(final Context context, String spotId, Map<String, String> localExtras) {
 
+    FyberAdapterConfiguration.updateGdprConsentStatus();
     mSpotId = spotId;
 
     if (mBannerSpot != null) {

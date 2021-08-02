@@ -130,6 +130,31 @@ public class FyberAdapterConfiguration extends BaseAdapterConfiguration {
 
         }
     }
+
+    public static void updateGdprConsentStatus() {
+        final Boolean mopubGdpr = extractGdprFromMoPub();
+
+        if (mopubGdpr == null) {
+            InneractiveAdManager.clearGdprConsentData();
+        } else {
+            InneractiveAdManager.setGdprConsent(mopubGdpr, InneractiveAdManager.GdprConsentSource.External);
+        }
+    }
+
+    private static Boolean extractGdprFromMoPub() {
+        final PersonalInfoManager personalInfoManager = MoPub.getPersonalInformationManager();
+
+        if (personalInfoManager != null && personalInfoManager.gdprApplies() == Boolean.TRUE) {
+            MoPubLog.log(CUSTOM, "Fyber will user GDPR consent collected by MoPub.");
+            return personalInfoManager.canCollectPersonalInformation();
+        } else if (personalInfoManager.getPersonalInfoConsentStatus() == ConsentStatus.UNKNOWN && MoPub.shouldAllowLegitimateInterest()) {
+            MoPubLog.log(CUSTOM, "GDPR result from MoPub is unknown and publisher allowed legitimate interest.");
+            return true;
+        } else {
+            MoPubLog.log(CUSTOM, "Fyber has not found any GDPR values");
+        }
+        return null;
+    }
     
     /**
      * Internal interface to bridge the gap between the custom event classes and the initializeNetwork
