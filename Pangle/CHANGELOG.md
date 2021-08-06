@@ -1,4 +1,7 @@
 ## Changelog
+  * 3.8.1.1.0
+     * This version of the adapters has been certified with Pangle 3.8.1.1 and MoPub SDK 5.18.0.
+
   * 3.7.1.4.0
      * This version of the adapters has been certified with Pangle 3.7.1.4 and MoPub SDK 5.17.0.
 
