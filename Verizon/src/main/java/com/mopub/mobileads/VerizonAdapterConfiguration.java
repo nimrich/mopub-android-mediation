@@ -38,14 +38,9 @@ import static com.verizon.ads.VASAds.ERROR_NO_FILL;
 public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
     private static final String ADAPTER_NAME = VerizonAdapterConfiguration.class.getSimpleName();
     private static final String ADAPTER_VERSION = BuildConfig.VERSION_NAME;
-    private static final String BIDDING_TOKEN_VERSION = "1.2";
-    private static final String EDITION_NAME_KEY = "editionName";
-    private static final String EDITION_VERSION_KEY = "editionVersion";
     private static final String MOPUB_NETWORK_NAME = BuildConfig.NETWORK_NAME;
-    private static final String VERIZON_ADS_DOMAIN = "com.verizon.ads";
 
     private static final Handler handler = new Handler(Looper.getMainLooper());
-    private static String biddingToken = null;
 
     public static final String MEDIATOR_ID = "MoPubVAS-" + ADAPTER_VERSION;
     public static final String SERVER_EXTRAS_AD_CONTENT_KEY = "adm";
@@ -62,19 +57,8 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
     @Nullable
     @Override
     public String getBiddingToken(@NonNull Context context) {
-        if (!VASAds.isInitialized()) {
-            MoPubLog.log(CUSTOM, ADAPTER_NAME, "Failed to compute a bidding token. " +
-                    "Verizon SDK must be initialized first.");
 
-            return null;
-        }
-
-        if (biddingToken == null) {
-            final String token = getToken();
-            biddingToken = getCompressedToken(token);
-        }
-
-        return biddingToken;
+        return VASAds.getBiddingToken(context);
     }
 
     @NonNull
@@ -182,55 +166,5 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
             default:
                 return NativeErrorCode.NETWORK_INVALID_STATE;
         }
-    }
-
-    private String getToken() {
-        final JSONObject biddingTokenJson = new JSONObject();
-        final JSONObject envJson = new JSONObject();
-        final JSONObject sdkInfoJson = new JSONObject();
-
-        try {
-            final String editionName = Configuration.getString(VERIZON_ADS_DOMAIN, EDITION_NAME_KEY,
-                    null);
-            final String editionVersion = Configuration.getString(VERIZON_ADS_DOMAIN, EDITION_VERSION_KEY,
-                    null);
-
-            if (editionName != null && editionVersion != null) {
-                sdkInfoJson.put("editionId", String.format("%s-%s", editionName, editionVersion));
-            }
-
-            sdkInfoJson.put("version", BIDDING_TOKEN_VERSION);
-            envJson.put("sdkInfo", sdkInfoJson);
-            biddingTokenJson.put("env", envJson);
-
-            return biddingTokenJson.toString();
-        } catch (JSONException e) {
-            MoPubLog.log(CUSTOM_WITH_THROWABLE, "Unable to get bidding token.", e);
-        }
-
-        return null;
-    }
-
-
-    private String getCompressedToken(final String stringToCompress) {
-
-        if (TextUtils.isEmpty(stringToCompress)) {
-            return null;
-        }
-
-        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        final DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(byteArrayOutputStream);
-
-        try {
-            deflaterOutputStream.write(stringToCompress.getBytes());
-            deflaterOutputStream.flush();
-            deflaterOutputStream.close();
-
-            return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.NO_WRAP);
-        } catch (Exception e) {
-            MoPubLog.log(CUSTOM_WITH_THROWABLE, "Unable to compress bidding token.", e);
-        }
-
-        return null;
     }
 }
