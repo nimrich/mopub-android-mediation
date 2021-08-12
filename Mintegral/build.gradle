@@ -1,4 +1,4 @@
-project.version = "15.6.21.0"
+project.version = "15.6.31.0"
 project.ext.networkName = 'mintegral'
 
 apply from: '../shared-build.gradle'
