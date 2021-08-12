@@ -1,4 +1,4 @@
-project.version = '5.0.9.2'
+project.version = '5.0.10.0'
 project.ext.networkName = 'ogury'
 
 apply from: '../shared-build.gradle'
