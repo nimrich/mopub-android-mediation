@@ -1,11 +1,14 @@
 package com.mopub.mobileads;
 
+import static com.verizon.ads.VASAds.ERROR_AD_REQUEST_FAILED;
+import static com.verizon.ads.VASAds.ERROR_AD_REQUEST_TIMED_OUT;
+import static com.verizon.ads.VASAds.ERROR_NO_FILL;
+
 import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Base64;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,21 +25,9 @@ import com.verizon.ads.Logger;
 import com.verizon.ads.VASAds;
 import com.verizon.ads.utils.ThreadUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
 import java.util.Map;
-import java.util.zip.DeflaterOutputStream;
-
-import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
-import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THROWABLE;
-import static com.verizon.ads.VASAds.ERROR_AD_REQUEST_FAILED;
-import static com.verizon.ads.VASAds.ERROR_AD_REQUEST_TIMED_OUT;
-import static com.verizon.ads.VASAds.ERROR_NO_FILL;
 
 public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
-    private static final String ADAPTER_NAME = VerizonAdapterConfiguration.class.getSimpleName();
     private static final String ADAPTER_VERSION = BuildConfig.VERSION_NAME;
     private static final String MOPUB_NETWORK_NAME = BuildConfig.NETWORK_NAME;
 
@@ -57,7 +48,7 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
     @Nullable
     @Override
     public String getBiddingToken(@NonNull Context context) {
-
+        Preconditions.checkNotNull(context);
         return VASAds.getBiddingToken(context);
     }
 
@@ -70,7 +61,6 @@ public class VerizonAdapterConfiguration extends BaseAdapterConfiguration {
     @NonNull
     @Override
     public String getNetworkSdkVersion() {
-
         final String editionVersion = Configuration.getString("com.verizon.ads",
                 "editionVersion", null);
 
